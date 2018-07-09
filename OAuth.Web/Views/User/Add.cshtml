@@ -1,0 +1,54 @@
+﻿<div class="modal-content">
+    <form class="form-horizontal aui" id="add_user_form" action="/User/Add" method="post">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>新增用户</h3>
+        </div>
+        <div class="modal-body">
+            <fieldset>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">账户名</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="UserName" class="form-control" datatype="*" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Email</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="Email" class="form-control" datatype="e" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">密码</label>
+                    <div class="col-sm-5">
+                        <input type="password" id="pwd1" name="Password" class="form-control" datatype="*6-16" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">确认密码</label>
+                    <div class="col-sm-5">
+                        <input type="password" id="pwd2" name="Password1" class="form-control" datatype="*" recheck="Password" />
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">姓名</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="FullName" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">电话号码</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="PhoneNumber" class="form-control" datatype="m" ignore="ignore" errormsg="请输入正确的手机号码" />
+                    </div>
+                </div>
+            </fieldset>
+            @Html.AntiForgeryToken()
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-sm" id="cancel" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary btn-sm" id="sure">保存</button>
+        </div>
+    </form>
+</div>

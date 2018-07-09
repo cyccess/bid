@@ -1,0 +1,229 @@
+﻿@{
+    ViewBag.Title = "板材询价单";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model PagedList<ItemMaterial>
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-list"></i></a>
+                <a href="javascript:;">板材询价单</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <div class="sub_toolbar">
+        </div>
+    </div>
+</div>
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="frame">
+        <div class="frame-header">
+            <span class="title-breadcrumb">
+                <a href="javascript:;">板材询价单</a>
+            </span>
+        </div>
+        <hr class="m0" />
+        <div class="widget widget-mytask">
+            <div class="frame-body">
+                <div class="line-item-container ">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>竞价</th>
+                                <th>名称</th>
+                                <th>是否中标</th>
+                                <th>类别</th>
+                                <th>规格</th>
+                                <th>材质</th>
+                                <th>标准</th>
+                                @*<th>长度(米)</th>*@
+                                <th>数量(支)</th>
+                                <th>总重(T)</th>
+                                <th>实际到厂单价</th>
+                                <th>到货时间</th>
+                                <th>价格为理计/磅计</th>
+                                <th>是否承兑/现款</th>
+                                <th>货到付款/款到发货/预付款</th>
+                                <th>是否含税</th>
+                                <th>备注</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (ViewBag.CheckItemExpire)
+                                        {
+                                            if (item.ItemQuotes.Any(iq => iq.SupplierId == SessionService.SessionInfo.Id))
+                                            {
+                                                <button type="button" class="btn btn-default btn-xs quote" data-flag="update" data-id="@item.Id">修改竞价</button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-success btn-xs quote" data-flag="new" data-id="@item.Id">立即竞价</button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (item.ItemQuotes.Any(iq => iq.SupplierId == SessionService.SessionInfo.Id))
+                                            {
+                                                <button type="button" class="btn btn-info btn-xs quote" data-flag="detail" data-id="@item.Id">查看竞价</button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-default btn-xs" disabled>竞价结束</button>
+                                            }
+                                        }
+                                    </td>
+                                    <th scope="row"><a href="javascript:;">@item.Name</a></th>
+                                    <td>
+                                        @if (item.ItemSure != null && item.ItemQuotes.Any(iq => iq.SupplierId == SessionService.SessionInfo.Id && iq.Id == item.ItemSure.QuoteID))
+                                        {
+                                            <span class="text-success">已中标</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">--</span>
+                                        }
+                                    </td>                                    
+                                    <td>@item.Mode</td>
+                                    <td>@item.Spec</td>
+                                    <td>@item.Texture</td>
+                                    <td>@item.Norm</td>
+                                    @*<td>@item.Extent</td>*@
+                                    <td>@item.Sum</td>
+                                    <td>@item.TotalWeight</td>
+                                    <td>@item.RealPrice</td>
+                                    <td>@item.ReachTime</td>
+                                    <td>@item.PriceUnit</td>
+                                    <td>@item.PriceMode</td>
+                                    <td>@item.PayMode</td>
+                                    <td>@item.IsTax</td>
+                                    <td>@item.Memo</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "page", ContainerTagName = "ul", CssClass = "pagination", CurrentPagerItemTemplate = "<li class=\"active\"><a href=\"#\">{0}</a></li>", DisabledPagerItemTemplate = "<li class=\"disabled\"><a>{0}</a></li>", PagerItemTemplate = "<li>{0}</li>", Id = "bootstrappager" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="sidebar right">
+    <div class="sidebar-loading"></div>
+    <div class="sidebar-panel-wrapper">
+        <div class="sidebar-content"></div>
+    </div>
+</div>
+<script type="text/x-jquery-tmpl" id="item_quote_tmpl">
+    <div class="sidebar-panel-header">
+        <a href="javascript:;" class="name" onclick="javascript:;">
+            <i class="icon icon-ticket"></i>
+            型材竞价
+        </a>
+        <ul class="nav nav-pills">
+            <li class="divider"></li>
+            <li>
+                <a href="javascript:;" class="js-close" title="关闭">
+                    <i class="icon icon-close"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="sidebar-panel-body height-nonav">
+        <div class="content mCustomScrollbar">
+            <div class="entry-well-content">
+                <form class="form-horizontal aui" id="form1" action="" method="post">
+                    <input id="hidId" name="Id" type="hidden" value="${Id}" />
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="control-label">到厂价格</label>
+                            <input type="text" name="Price" class="form-control" autocomplete="off" datatype="n" value="${Price}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">报价有效期</label>
+                            <input type="text" name="Term" class="form-control" autocomplete="off" datatype="*" value="${Term}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">备注</label>
+                            <textarea name="Memo" class="form-control" maxlength="500" rows="5">${Memo}</textarea>
+                        </div>
+                        <div class="form-group text-right">
+                            <button type="button" class="btn btn-success btn-sm" id="sure" onclick="uv.js_post_quote()">确定提交</button>
+                            <button type="button" class="btn btn-default btn-sm" id="cancel">取消</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-jquery-tmpl" id="item_quote_detail_tmpl">
+    <div class="sidebar-panel-header">
+        <a href="javascript:;" class="name" onclick="javascript:;">
+            <i class="icon icon-ticket"></i>
+            竞价详细
+        </a>
+        <ul class="nav nav-pills">
+            <li class="divider"></li>
+            <li>
+                <a href="javascript:;" class="js-close" title="关闭">
+                    <i class="icon icon-close"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="sidebar-panel-body height-nonav">
+        <div class="content mCustomScrollbar">
+            <div class="entry-well-content">
+                <div class="entry-title">
+                    <h4>我的报价</h4>
+                </div>
+                <div class="entry-desc">
+                    <p>价格：${quote.Price}</p>
+                    <p>报价有效期：${quote.Term}</p>
+                    <p>时间：${quoteDate}</p>
+                    <p>描述：${quote.Memo}</p>
+                </div>
+                <hr />
+                <div class="entity-app">
+                    <div class="entity-app-title"><i class="icon icon-cascades"></i> 中标信息</div>
+                    {{if sure.Id !== 0}}
+                    <p class="text-danger">价格：${sure.Price}</p>
+                    <p class="text-danger">报价有效期：${sure.Term}</p>
+                    <p class="text-danger">时间：${sureDate}</p>
+                    <p class="text-danger">描述：${sure.Memo}</p>
+                    {{else}}
+                    <p class="text-warning">暂无中标信息！</p>
+                    {{/if}}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+@section Script{
+    <script src="~/assets/js/Validform_v5.3.2_min.js"></script>
+    <script src="~/assets/js/jquery.sidebar.js"></script>
+    <script src="~/assets/js/jquery.tmpl.min.js"></script>
+    <script src="~/assets/js/quote.js?v=20160509"></script>
+    <script>
+        $(function () {
+            $(".quote").on("click", function () {
+                var that = $(this);
+                locator.openQuote(this, { id: that.data("id") });
+            });
+        });
+    </script>
+}

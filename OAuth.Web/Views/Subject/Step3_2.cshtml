@@ -1,0 +1,284 @@
+﻿@{
+    ViewBag.Title = "五金询价单";
+    Layout = null;
+}
+@model IEnumerable<ItemContrast>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>五金询价单</title>
+    <link href="~/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/assets/css/dashboard.css" rel="stylesheet" />
+    <link href="~/assets/css/base_inner.css" rel="stylesheet" />
+    <link href="~/assets/css/iconfont.css" rel="stylesheet" />
+    <link href="~/assets/css/jquery.noty.css" rel="stylesheet" />
+    <link href="~/assets/css/noty_theme_default.css" rel="stylesheet" />
+    <link href="~/assets/css/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+    <div class="mod-navbar">
+        <div class="main-header">
+            <div class="title">
+                <h3>
+                    <a href="javascript:;"><i class="icon icon-list"></i></a>
+                    <a href="javascript:;">五金询价单</a>
+                </h3>
+            </div>
+        </div>
+        <div class="sub">
+            <div class="sub_toolbar">
+                <button class="btn btn-success" id="btn_submit">保存</button>
+                <button class="btn btn-default" id="btn_pdf">导出pdf</button>
+                <button class="btn btn-default" onclick='javascript:window.location.href = "/subject/index"'>返回</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigator-content">
+        <div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+            <div class="frame">
+                <div class="frame-header">
+                    <span class="title-breadcrumb">
+                        <a href="javascript:;">五金询价单</a>
+                    </span>
+                </div>
+                <hr class="m0" />
+                <div class="widget widget-mytask">
+                    <div class="frame-body">
+                        <div class="line-item-container ">
+                            <table class="table table-bordered" style="width: 3000px;">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2" colspan="8" class="text-center"><h4>采购单位：青岛武晓集团有限公司</h4></th>
+                                        <th rowspan="2" colspan="2"><h4>询价类别</h4></th>
+                                        <th rowspan="2" colspan="6" class="text-center"><h4>五金询价单</h4></th>
+                                        <th colspan="2">询价期间</th>
+                                        <th>@ViewBag.Item.ItemName</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="2"> @ViewBag.Item.StartDate.ToString("yyyy-MM-dd HH:mm") 至 @ViewBag.Item.EndDate.ToString("yyyy-MM-dd HH:mm") </th>
+                                        <th>@ViewBag.Item.ItemNo</th>
+                                    </tr>
+                                    <tr>
+                                        <th>名称</th>
+                                        @*<th>类别</th>*@
+                                        <th>规格</th>
+                                        @*<th>材质</th>
+                                        <th>标准</th>
+                                        <th>长度(米)</th>*@
+                                        <th>数量</th>
+                                        <th>单位</th>
+                                        @*<th>实际到厂单价</th>*@
+                                        <th>到货时间</th>
+                                        @*<th>价格为理计/磅计</th>
+                                        <th>是否承兑/现款</th>
+                                        <th>货到付款/款到发货/预付款</th>*@
+                                        <th>使用地点</th>
+                                        <th>是否含税</th>
+                                        <th>备注</th>
+                                        <th colspan="8" class="text-center">报价单位</th>
+                                        <th>报价最低单位</th>
+                                        <th>选择采购厂家</th>
+                                        <th>备注</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr style="height:37px;">
+                                            <th scope="row">@item.Name</th>
+                                            @*<td>@item.Mode</td>*@
+                                            <td>@item.Spec</td>
+                                            @*<td>@item.Texture</td>
+                                            <td>@item.Norm</td>
+                                            <td>@item.Extent</td>*@
+                                            <td>@item.Amount</td>
+                                            <td>@item.PriceUnit</td>
+                                            @*<td>@item.RealPrice</td>*@
+                                            <td>@item.ReachTime</td>
+                                            @*<td>@item.PriceUnit</td>
+                                            <td>@item.PriceMode</td>
+                                            <td>@item.PayMode</td>*@
+                                            <td>@item.UsePlace</td>
+                                            <td>@item.IsTax</td>
+                                            <td class="w150 t1">@item.Memo</td>
+                                            <td class="w100 t1" data-ix="1" data-id="@item.SupplierID1" data-name="@item.SupplierName1"><span data-toggle="tooltip" style="white-space:pre" data-html="true" data-placement="left" title="@("<p style='white-space:normal;text-align:left'>有效期："+item.Term1+"<br/>备注："+item.Memo1+"</p>")">@item.SupplierName1</span></td>
+                                            <td class="w100 t1" data-ix="2" data-id="@item.SupplierID2" data-name="@item.SupplierName2"><span data-toggle="tooltip" style="white-space:pre" data-html="true" data-placement="left" title="@("<p style='white-space:normal;text-align:left'>有效期："+item.Term2+"<br/>备注："+item.Memo2+"</p>")">@item.SupplierName2</span></td>
+                                            <td class="w100 t1" data-ix="3" data-id="@item.SupplierID3" data-name="@item.SupplierName3"><span data-toggle="tooltip" style="white-space:pre" data-html="true" data-placement="left" title="@("<p style='white-space:normal;text-align:left'>有效期："+item.Term3+"<br/>备注："+item.Memo3+"</p>")">@item.SupplierName3</span></td>
+                                            <td class="w100 t1" data-ix="4" data-id="@item.SupplierID4" data-name="@item.SupplierName4"><span data-toggle="tooltip" style="white-space:pre" data-html="true" data-placement="left" title="@("<p style='white-space:normal;text-align:left'>有效期："+item.Term4+"<br/>备注："+item.Memo4+"</p>")">@item.SupplierName4</span></td>
+                                            <td class="w100 t1" data-ix="5" data-id="@item.SupplierID5" data-name="@item.SupplierName5"><span data-toggle="tooltip" style="white-space:pre" data-html="true" data-placement="left" title="@("<p style='white-space:normal;text-align:left'>有效期："+item.Term5+"<br/>备注："+item.Memo5+"</p>")">@item.SupplierName5</span></td>
+                                            <td class="w100 t1" data-ix="6" data-id="@item.SupplierID6" data-name="@item.SupplierName6"><span data-toggle="tooltip" style="white-space:pre" data-html="true" data-placement="left" title="@("<p style='white-space:normal;text-align:left'>有效期："+item.Term6+"<br/>备注："+item.Memo6+"</p>")">@item.SupplierName6</span></td>
+                                            <td class="w100 t1" data-ix="7" data-id="@item.SupplierID7" data-name="@item.SupplierName7"><span data-toggle="tooltip" style="white-space:pre" data-html="true" data-placement="left" title="@("<p style='white-space:normal;text-align:left'>有效期："+item.Term7+"<br/>备注："+item.Memo7+"</p>")">@item.SupplierName7</span></td>
+                                            <td class="w100 t1" data-ix="8" data-id="@item.SupplierID8" data-name="@item.SupplierName8"><span data-toggle="tooltip" style="white-space:pre" data-html="true" data-placement="left" title="@("<p style='white-space:normal;text-align:left'>有效期："+item.Term8+"<br/>备注："+item.Memo8+"</p>")">@item.SupplierName8</span></td>
+                                            <td class="w150 t1">@item.MinName</td>
+                                            <td class="wm w150" data-id="@item.MaterialID" data-qe="@item.InID">
+                                                @if (item.MaterialID == null)
+                                                {
+                                                    @item.InName
+                                                }
+                                                else
+                                                {
+                                                    <a href="/subject/contract/@item.ItemID?it=@item.InID">@item.InName</a>
+                                                }
+                                            </td>
+                                            <td class="mo w150">@item.Explain</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar right">
+        <div class="sidebar-loading"></div>
+        <div class="sidebar-panel-wrapper">
+            <div class="sidebar-content"></div>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/template" id="memo-tmpl">
+    <div class="modal-content">
+        <form class="form-horizontal aui" id="add_user_form" action="/User/Add" method="post">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h3>备注信息</h3>
+            </div>
+            <textarea id="memo" name="memo" class="form-control"></textarea>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" id="cancel" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary btn-sm" id="sure">确定</button>
+            </div>
+        </form>
+    </div>
+</script>
+
+<script src="~/assets/js/jquery-1.10.2.min.js"></script>
+<script src="~/assets/js/bootstrap.min.js"></script>
+<script src="~/assets/js/respond.min.js"></script>
+<script src="~/assets/js/docs.min.js"></script>
+<script src="~/assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="~/assets/js/jquery.noty.js"></script>
+<script src="~/assets/js/dialog.js"></script>
+<script src="~/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="~/assets/bower_components/icheck/icheck.min.js"></script>
+<script src="~/assets/js/jquery.sidebar.js"></script>
+<script src="~/assets/js/jquery.tmpl.min.js"></script>
+<script src="~/assets/js/popbox.js"></script>
+<script>
+    $(function () {
+        $('.w100[data-id!=""]>span').tooltip().css({"cursor":"pointer"});
+        if ($(".frame-body>.line-item-container").length > 0) {
+            $(".frame-body>.line-item-container").mCustomScrollbar({ axis: "x", theme: "dark" });
+        }
+        var wm = $("table tr .wm");
+        wm.each(function (i, ele) {
+            var $wm = $(ele);
+            if ($wm.data("id") != "" && $wm.data("qe") !== "") {
+                var that = $wm.parent().children("td[data-id='" + $wm.data("qe") + "']");
+                if (that.data("ix") === 1) {
+                    that.addClass("colorgreen");
+                }
+                else {
+                    that.addClass("colorred");
+                }
+            }
+        });
+
+        $(".w100").on("click", function () {
+            var that = $(this);
+            if (that.data("id")==="") {
+                return false;
+            }
+            var nextRw=that.parent().next("tr");
+            if (that.data("ix") === 1) {
+                that.parent().children(".w100").removeClass("colorgreen colorred");
+                that.addClass("colorgreen");
+                that.parent().children(".mo").html("");
+                that.parent().children(".wm").data("qe", that.data("id"));
+                that.parent().children(".wm").html(that.data("name"));
+                nextRw.children(".wm").html(nextRw.children("td[data-ix='"+that.data("ix")+"']").data("name"));
+            }
+            else {
+                var tmpl = $("#memo-tmpl").html();
+                $.dialog({
+                    content: tmpl,
+                    width: "400px",
+                    width: "300px",
+                    init: function () {
+
+                    },
+                    sure: function () {
+                        var _dialog = this;
+                        if ($("#memo").val()==="") {
+                            $.noty({text: "备注不允许为空！",layout: 'topCenter',type: 'information'});
+                            return false;
+                        }
+                        that.parent().children(".w100").removeClass("colorgreen colorred");
+                        that.addClass("colorred");
+                        that.parent().children(".mo").html($("#memo").val());
+                        that.parent().children(".wm").data("qe", that.data("id"));
+                        that.parent().children(".wm").html(that.data("name"));
+                        nextRw.children(".wm").html(nextRw.children("td[data-ix='"+that.data("ix")+"']").data("name"));
+                        _dialog.modal.close();
+                        return false;
+                    }
+                });
+            }
+        });
+
+        $("#btn_submit").on("click", function () {
+            var rw = [];
+            var wm = $("table tr .wm");
+
+            wm.each(function (i, ele) {
+                var $wm = $(ele);
+                if ($wm.data("id") !== "" && $wm.data("qe") !== "") {
+                    var lt = [];
+                    lt.push($wm.data("id") , $wm.data("qe") , $wm.next().html());
+                    rw.push(lt);
+                }
+            });
+            $.post("/subject/ItemSubmit", { rw: rw }, function (data) {
+                $.noty({
+                    text: data.message,
+                    layout: 'topCenter',
+                    type: 'information',
+                    timeout: 500,
+                    onClosed: function () {
+                        location.reload();
+                    }
+                });
+            });
+        });
+
+        $("#btn_pdf").on("click", function () {
+            $.post("/subject/reporttopdf", { id: @ViewBag.Item.Id }, function (data) {
+                var st = '<a href="/subject/DownFile?fileName='+data.name+'">点击下载</a>';
+                $.noty({
+                    text: st,
+                    layout: 'topCenter',
+                    timeout: false,
+                    closeWith: ['click'],
+                    type: 'information'
+                });
+            });
+        });
+
+    });
+</script>

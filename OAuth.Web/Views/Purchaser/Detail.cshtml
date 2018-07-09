@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "采购商详情";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Purchaser
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-list"></i></a>
+                <a href="javascript:;">采购商详情</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <div class="sub_toolbar">
+        </div>
+    </div>
+</div>
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="frame">
+        <div class="frame-header">
+            <span class="title-breadcrumb">
+                <a href="javascript:;">详情</a>
+            </span>
+        </div>
+        <hr class="m0" />
+        <div class="widget widget-mytask">
+            <div class="body">
+                <form class="form-horizontal aui form-wizard" id="add_item_form" action="" method="post">
+                    <fieldset>
+                        <input id="Id" name="Id" type="hidden" value="@Model.Id" />
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">采购商名称：</label>
+                                    <div class="col-md-7 pt5">
+                                        <p>@Model.PurchaserName</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">法定代表人：</label>
+                                    <div class="col-md-7 pt5">
+                                        <p>@Model.LegalPerson</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">传真电话：</label>
+                                    <div class="col-md-7 pt5">
+                                        <p>@Model.Fax</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">银行账号：</label>
+                                    <div class="col-md-7 pt5">
+                                        <p>@Model.BankNo</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">单位地址：</label>
+                                    <div class="col-md-7 pt5">
+                                        <p>@Model.Address</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">委托代理人：</label>
+                                    <div class="col-md-7 pt5">
+                                        <p>@Model.EntrustPerson</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">开户银行：</label>
+                                    <div class="col-md-7 pt5">
+                                        <p>@Model.BankName</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

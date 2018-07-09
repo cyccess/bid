@@ -1,0 +1,266 @@
+﻿@{
+    ViewBag.Title = "编辑供应商";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model SupplierDto
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-list"></i></a>
+                <a href="javascript:;">编辑供应商</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <div class="sub_toolbar">
+        </div>
+    </div>
+</div>
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="frame">
+        <div class="frame-header">
+            <span class="title-breadcrumb">
+                <a href="javascript:;">表单</a>
+            </span>
+        </div>
+        <hr class="m0" />
+        <div class="widget widget-mytask">
+            <div class="body">
+                <form class="form-horizontal aui form-wizard" id="add_item_form" action="" method="post">
+                    <fieldset>
+                        <input id="Id" name="Id" type="hidden" value="@Model.Id"/>
+                        <input id="IsActivated" name="IsActivated" type="hidden" value="@Model.IsActivated.ToString()"/>
+                        <input id="IsEnabled" name="IsEnabled" type="hidden" value="@Model.IsEnabled.ToString()" />
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">电子邮箱：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" name="Email" class="form-control" datatype="e" value="@Model.Email" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">地址：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="Address" name="Address" datatype="*" value="@Model.Address" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">联系人：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="UserName" name="UserName" datatype="*" value="@Model.UserName" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">联系手机：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="MobilePhone" name="MobilePhone" datatype="*" value="@Model.MobilePhone" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">邮编：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="Postcode" name="Postcode" datatype="*" value="@Model.Postcode" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">税号：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="TaxNo" name="TaxNo" datatype="*" value="@Model.TaxNo" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">付款时间：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="PayTime" name="PayTime" datatype="*" value="@Model.PayTime"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">开户银行：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="BankName" name="BankName" datatype="*" value="@Model.BankName" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">法定代表人：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="LegalPerson" name="LegalPerson" datatype="*" value="@Model.LegalPerson" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">供应商类别：</label>
+                                    <div class="col-md-7">
+                                        <input type="hidden" name="SupplierModes" id="SupplierModes" value="@string.Join(",", Model.SupplierModeIds)" />
+                                        <input type="text" class="form-control" name="sm" id="sm" onclick="locator.openMode(this, { modeId: 'SupplierModes', modeName: 'sm' })" datatype="*" nullmsg="请选择供应商类别！" readonly value="@Model.ModesName" />
+                                    </div>
+                                </div>
+        
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">供应商名称：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="SupplierName" name="SupplierName" datatype="*" value="@Model.SupplierName" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">经办人：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="HandleName" name="HandleName" datatype="*" value="@Model.HandleName" />
+                                    </div>
+                                </div>
+                                <div class="form-group has-feedback">
+                                    <label class="col-md-4 control-label">经办日期：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="HandleTime" name="HandleTime" aria-describedby="inputSuccess1Status" onfocus="WdatePicker({ isShowClear: false, readOnly: true })" datatype="*" value="@Model.HandleTime.Value.ToShortDateString()" />
+                                        <span class="glyphicon glyphicon-calendar form-control-feedback" aria-hidden="true"></span>
+                                        <span id="inputSuccess1Status" class="sr-only">(success)</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">固定电话：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="FixedPhone" name="FixedPhone" datatype="*" value="@Model.FixedPhone" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">传真：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="Fax" name="Fax" datatype="*" value="@Model.Fax" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">银行帐号：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="BankNo" name="BankNo" datatype="*" value="@Model.BankNo" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">委托代理人：</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="EntrustPerson" name="EntrustPerson" datatype="*" value="@Model.EntrustPerson" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">备注：</label>
+                                    <div class="col-md-7">
+                                        <textarea rows="4" class="form-control" name="Memo">@Model.Memo</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-default btn-sm" id="cancel" onclick='javascript:window.location.href="/supplier"'>返回</button>
+                            <button type="submit" class="btn btn-primary btn-sm" id="sure">确定提交</button>
+                            @Html.AntiForgeryToken()
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="sidebar right">
+    <div class="sidebar-loading"></div>
+    <div class="sidebar-panel-wrapper">
+        <div class="sidebar-content"></div>
+    </div>
+</div>
+
+@section Script{
+    <script type="text/x-jquery-tmpl" id="mode_tmpl">
+        <div class="sidebar-panel-header">
+            <a href="javascript:;" class="name" onclick="javascript:;">
+                <i class="icon icon-friend"></i>
+                供应商类型
+            </a>
+
+            <ul class="nav nav-pills">
+                <li class="divider"></li>
+                <li>
+                    <a href="javascript:;" class="js-close" title="关闭">
+                        <i class="icon icon-close"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="sidebar-panel-body height-nonav">
+            <div class="content mCustomScrollbar">
+                <div class="entry-well-content">
+                    {{each(i,p) data}}
+                    <div class="entry-part-content">
+                        <div class="entry-part-title">${p.name}</div>
+                        <ul>
+                            {{each(i,r) p.data}}
+                            <li data-id="${r.id}">
+                                <a href="javascript:;" class="item-label" onclick="uv.js_set_part(this)" data-role-id="${r.id}">${r.name}</a>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    <hr />
+                    {{/each}}
+                    <button type="button" class="btn btn-primary btn-sm" onclick="uv.js_get_active(this)">确定</button>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script src="~/assets/js/Validform_v5.3.2_min.js"></script>
+    <script src="~/assets/widgets/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/assets/js/jquery.sidebar.js"></script>
+    <script src="~/assets/js/jquery.tmpl.min.js"></script>
+    <script src="~/assets/js/popbox.js"></script>
+    <script src="~/assets/js/mode.js"></script>
+    <script src="~/assets/js/jquery.form.js"></script>
+    <script>
+
+        $(function () {
+            var sform = $(".aui").Validform({
+                tiptype: 3,
+                label: ".control-label",
+                showAllError: true,
+                beforeSubmit: function () {
+                    $("#add_item_form").ajaxSubmit({
+                        beforeSubmit: function (formData, jqForm, options) {
+                            $("#sure").prop("disabled", true).text("提交中...");
+                        },
+                        success: function (data, textStatus) {
+                            if (data.code === 200) {
+                                $.noty({
+                                    text: data.message,
+                                    layout: 'topCenter',
+                                    type: 'information',
+                                    timeout: 500,
+                                    onClosed: function () {
+                                        location.href = data.url;
+                                    }
+                                });
+                            }
+                            else {
+                                $.noty("操作异常！", 'information');
+                            }
+                            return false;
+                        },
+                        error: function (data, status, e) { },
+                        url: "/supplier/edit/?timestamp=" + new Date().getTime(),
+                        type: "post",
+                        dataType: "json",
+                        timeout: 600000
+                    });
+                    return false;
+                }
+            });
+        });
+
+    </script>
+}

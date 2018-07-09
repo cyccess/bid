@@ -1,0 +1,240 @@
+﻿@{
+    ViewBag.Title = "询价单发布";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Item
+@section Head{<link href="~/assets/bower_components/icheck/skins/minimal/red.css" rel="stylesheet" />}
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-list"></i></a>
+                <a href="javascript:;">询价单发布</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <div class="sub_toolbar">
+            @*<button class="btn btn-success btn-fancy btn-sm" onclick="uv.js_user_add(this)"><i class="glyphicon glyphicon-plus"></i> 创建用户</button>*@
+        </div>
+    </div>
+</div>
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="frame">
+        <div class="frame-header">
+            <span class="title-breadcrumb">
+                <a href="javascript:;">询价单信息</a>
+            </span>
+        </div>
+        <hr class="m0" />
+        <div class="widget widget-mytask">
+            <div class="body">
+                <form class="form-horizontal aui form-wizard" action="/Subject/Step1" id="add_item_form" method="post">
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">工程名称</label>
+                                    <div class="col-md-7">
+                                        <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                                        <input type="text" id="ItemName" name="ItemName" class="form-control" autocomplete="off" datatype="*" value="@Model.ItemName" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group has-feedback">
+                                    <label class="col-md-4 control-label">开始日期</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="StartDate" name="StartDate" @(Model.Id==-1?"": "disabled='disabled'") value="@Model.StartDate.ToString("yyyy-MM-dd HH:mm")" onFocus="WdatePicker({ isShowClear: false, dateFmt: 'yyyy-MM-dd HH:mm', readOnly: true, minDate: '%y-%M-%d' })" aria-describedby="inputSuccess1Status" datatype="*">
+                                        <span class="glyphicon glyphicon-calendar form-control-feedback" aria-hidden="true"></span>
+                                        <span id="inputSuccess1Status" class="sr-only">(success)</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">供应商类型</label>
+                                    <div class="col-md-7">
+                                        <input type="hidden" id="ModeID" name="ModeID" value="@ViewBag.ModeID" />
+                                        <input type="text" id="ModeName" name="ModeName" readonly="readonly" onclick="locator.openMode(this, {modeId:'ModeID',modeName:'ModeName'})" class="form-control" value="@ViewBag.ModeName" />
+                                    </div>
+                                </div>
+                                <div class="form-group has-feedback">
+                                    <label class="col-md-4 control-label">签约时间</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="SignTime" name="SignTime" value="@Model.SignTime.ToString("yyyy-MM-dd")" onFocus="WdatePicker({ isShowClear: false, readOnly: true, minDate: '%y-%M-%d' })" aria-describedby="inputSuccess2Status" datatype="*">
+                                        <span class="glyphicon glyphicon-calendar form-control-feedback" aria-hidden="true"></span>
+                                        <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">单据类型</label>
+                                    <div class="col-md-7">
+                                        <select id="TempMode" name="TempMode" class="form-control"  @(Model.Id==-1?"": "disabled='disabled'")>
+                                            @foreach (var item in ViewBag.TempMode)
+                                            {
+                                                <option value="@item.DictKey"  @(item.DictKey == Convert.ToString(Model.TempMode) ? "selected='selected'" : " ")>@item.DictValue</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group has-feedback">
+                                    <label class="col-md-4 control-label">截止日期</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="EndDate" name="EndDate" @(Model.Id==-1?"": "disabled='disabled'") value="@Model.EndDate.ToString("yyyy-MM-dd HH:mm")" onFocus="WdatePicker({ isShowClear: false, readOnly: true, dateFmt: 'yyyy-MM-dd HH:mm', minDate: '%y-%M-%d' })" aria-describedby="inputSuccess2Status" datatype="*">
+                                        <span class="glyphicon glyphicon-calendar form-control-feedback" aria-hidden="true"></span>
+                                        <span id="inputSuccess2Status" class="sr-only">(success)</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">合同编号</label>
+                                    <div class="col-md-7">
+                                        <input type="text" id="ItemNo" name="ItemNo" autocomplete="off" class="form-control" value="@Model.ItemNo"/>
+                                    </div>
+                                </div>
+                                <div class="form-group has-feedback">
+                                    <label class="col-md-4 control-label">签约地点</label>
+                                    <div class="col-md-7">
+                                        <input type="text" id="SignPlace" name="SignPlace" autocomplete="off" class="form-control" value="@Model.SignPlace" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">备注</label>
+                                    <div class="col-md-7">
+                                        <textarea id="Memo" name="Memo" rows="3" autocomplete="off" datatype="*0-500" class="form-control">@Model.Memo</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-default btn-sm" id="cancel" onclick='javascript:window.location.href="/subject/index"'>返回</button>
+                            <button type="submit" class="btn btn-primary btn-sm" id="sure">保存并上传询价单</button>
+                            @Html.AntiForgeryToken()
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="sidebar right">
+    <div class="sidebar-loading"></div>
+    <div class="sidebar-panel-wrapper">
+        <div class="sidebar-content"></div>
+    </div>
+</div>
+
+<script type="text/x-jquery-tmpl" id="mode_tmpl">
+    <div class="sidebar-panel-header">
+        <a href="javascript:;" class="name" onclick="javascript:;">
+            <i class="icon icon-friend"></i>
+            供应商类型
+        </a>
+
+        <ul class="nav nav-pills">
+            <li class="divider"></li>
+            <li>
+                <a href="javascript:;" class="js-close" title="关闭">
+                    <i class="icon icon-close"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="sidebar-panel-body height-nonav">
+        <div class="content mCustomScrollbar">
+            <div class="entry-well-content">
+                {{each(i,p) data}}
+                <div class="entry-part-content">
+                    <div class="entry-part-title">${p.name}</div>
+                    <ul>
+                        {{each(i,r) p.data}}
+                        <li data-id="${r.id}">
+                            <a href="javascript:;" class="item-label" onclick="uv.js_set_part(this)" data-role-id="${r.id}">${r.name}</a>
+                        </li>
+                        {{/each}}
+
+                        @*{{if Roles.length === 0}}
+                        <li class="no-role">该项目暂无角色</li>
+                        {{/if}}*@
+                    </ul>
+                </div>
+                <hr />
+                {{/each}}
+                <button type="button" class="btn btn-primary btn-sm" onclick="uv.js_get_active(this)">确定</button>
+            </div>
+        </div>
+    </div>
+</script>
+
+@section Script{
+    <script src="~/assets/js/Validform_v5.3.2_min.js"></script>
+    <script src="~/assets/widgets/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/assets/bower_components/icheck/icheck.min.js"></script>
+    <script src="~/assets/js/Validform_v5.3.2_min.js"></script>
+    <script src="~/assets/js/jquery.sidebar.js"></script>
+    <script src="~/assets/js/jquery.tmpl.min.js"></script>
+    <script src="~/assets/js/popbox.js"></script>
+    <script src="~/assets/js/mode.js"></script>
+    <script src="~/assets/js/item.js"></script>
+    <script src="~/assets/js/jquery.form.js"></script>
+    <script src="~/assets/bower_components/icheck/icheck.min.js"></script>
+    <script language="javascript">
+        $("#add_item_form").Validform({
+            label: '.control-label',
+            tiptype: 3,
+            beforeSubmit: function () {
+                $("#add_item_form").ajaxSubmit({
+                    beforeSubmit: function (formData, jqForm, options) {
+                        var sTime = new Date($("#StartDate").val().replace(/\-/g, "/"));
+                        var eTime = new Date($("#EndDate").val().replace(/\-/g, "/"));
+                        var time = parseInt((eTime.getTime() - sTime.getTime()) / parseInt(1000 * 3600));
+                        if (time<0) {
+                            $.noty({ text: "报价截至时间不早于报价开始时间！", layout: 'topCenter', type: 'information' });
+                            return false;
+                        }
+                        if (time < 24) {
+                            $.noty({text: "报价截至时间最短不低于24小时！",layout: 'topCenter',type: 'information'});
+                            return false;
+                        }
+                        if (time > 48) {
+                            $.noty({ text: "报价截至时间最长不高于48小时！", layout: 'topCenter', type: 'information' });
+                            return false;
+                        }
+                    },
+                    success: function (data, textStatus) {
+                        if (data.code === 200) {
+                            $.noty({
+                                text: data.message,
+                                layout: 'topCenter',
+                                type: 'information',
+                                timeout: 500,
+                                onClosed: function () {
+                                    var st = "/subject/step2/" + data.id;
+                                    location.href = st;
+                                }
+                            });
+                        }
+                        else {
+                            $.noty({
+                                text: data.message,
+                                layout: 'topCenter',
+                                type: 'information'
+                            });
+                            return false;
+                        }
+                    },
+                    error: function (data, status, e) { },
+                    url: "/subject/step1/?timestamp=" + new Date().getTime(),
+                    type: "post",
+                    dataType: "json",
+                    timeout: 600000
+                });
+                return false;
+            }
+        });
+    </script>
+}

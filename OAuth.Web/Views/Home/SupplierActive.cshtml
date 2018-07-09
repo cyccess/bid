@@ -1,0 +1,103 @@
+﻿@{
+    Layout = null;
+}
+@model ResultModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>供应商激活</title>
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/css/jquery.noty.css" rel="stylesheet" />
+    <link href="~/assets/css/noty_theme_default.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div class="alert alert-info">
+            @Model.Message
+        </div>
+        @if (Model.Code == 10000)
+        {
+            <div class="row">
+                <div class="col-lg-10">
+                    <form class="form-horizontal aui form-wizard" id="add_item_form" action="/Home/SupplierModifyPwd" method="post">
+                        <input id="supplierId" name="supplierId" type="hidden" value="@HttpUtility.UrlEncode(ViewBag.SupplierId)" />
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">旧密码：</label>
+                                        <div class="col-md-7">
+                                            <input type="password" name="oldPwd" class="form-control" datatype="*" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">新密码：</label>
+                                        <div class="col-md-7">
+                                            <input type="password" name="newPwd" class="form-control" datatype="*6-20" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">确认密码：</label>
+                                        <div class="col-md-7">
+                                            <input type="password" class="form-control" id="Password" name="Password" datatype="*6-20" recheck="newPwd" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">&nbsp;</label>
+                                        <div class="col-md-7">
+                                            <button type="submit" class="btn btn-primary btn-sm" id="sure">确定提交</button>
+                                            @Html.AntiForgeryToken()
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>
+<script src="~/assets/js/jquery-1.10.2.min.js"></script>
+<script src="~/assets/js/jquery.noty.js"></script>
+<script src="~/assets/js/Validform_v5.3.2_min.js"></script>
+<script src="~/assets/js/jquery.form.js"></script>
+<script>
+    $(function () {
+        var sform = $(".aui").Validform({
+            tiptype: 3,
+            label: ".control-label",
+            showAllError: true,
+            beforeSubmit: function () {
+                $("#add_item_form").ajaxSubmit({
+                    beforeSubmit: function (formData, jqForm, options) {
+                        $("#sure").prop("disabled", true).text("提交中...");
+                    },
+                    success: function (data, textStatus) {
+                        $.noty({
+                            text: data.Message,
+                            layout: 'topCenter',
+                            type: 'information',
+                            onClosed: function () {
+                                if (data.Code === 200)
+                                    location.href = "/Home/Login";
+                            }
+                        });
+
+                        if (data.Code === -100) {
+                            $("#sure").prop("disabled", false).text("确定提交");
+                        }
+                    },
+                    error: function (data, status, e) { },
+                    url: "/Home/SupplierModifyPwd/?v=" + new Date().getTime(),
+                    type: "post",
+                    dataType: "json",
+                    timeout: 600000
+                });
+                return false;
+            }
+        });
+    });
+</script>

@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="OAuth.Domain.Model.UserRole">
+    <Position X="5.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIEAAAAAAAAEAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\UserRole.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Role" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="OAuth.Domain.Model.User">
+    <Position X="5.5" Y="0.5" Width="1.5" />
+    <AssociationLine Name="UserRoles" Type="OAuth.Domain.Model.UserRole" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.25" Y="3.064" />
+        <Point X="6.25" Y="4.25" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAIAEAAgAAIAAAAAAQAAIAABAAAgCAQAAAAAAAAA=</HashCode>
+      <FileName>Model\User.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="UserRoles" />
+      <Property Name="UserProjects" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="OAuth.Domain.Model.UserProject">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAgABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\UserProject.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Project" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="OAuth.Domain.Model.RoleRight">
+    <Position X="10.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\RoleRight.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Domain.Model.Role">
+    <Position X="8" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAggAAAAAAAAAAQABAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Model\Role.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="RoleRights" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="OAuth.Domain.Model.Project">
+    <Position X="10.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAggAAAAAIAAAAQAAgAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Project.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Domain.Model.Permission">
+    <Position X="0.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAgEASAAAAAAAAAAAAAAAAAAAAAAgEAAAA=</HashCode>
+      <FileName>Model\Permission.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OAuth.Domain.Model.ModulePermission">
+    <Position X="3.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAQAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\ModulePermission.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Permission" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="OAuth.Domain.Model.Module">
+    <Position X="0.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIggAEAAgBAAAAAAAIAAAQBAAAIIACAAAIAAAAAAA=</HashCode>
+      <FileName>Model\Module.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Status" />
+    </ShowAsAssociation>
+  </Class>
+  <Enum Name="OAuth.Domain.Model.MenuStatus">
+    <Position X="3.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Module.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="微软雅黑" Size="9" />
+</ClassDiagram>

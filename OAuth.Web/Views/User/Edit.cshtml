@@ -1,0 +1,93 @@
+﻿@{
+    Layout = null;
+}
+@model User
+<div class="modal-content">
+    <form class="form-horizontal aui" id="form1" action="" method="post">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>编辑用户</h3>
+        </div>
+        <div class="modal-body">
+            <fieldset>
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">账户名</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="UserName" class="form-control" datatype="*" value="@Model.UserName" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">密码</label>
+                    <div class="col-sm-5">
+                        <input type="password" id="pwd1" name="Password" class="form-control" datatype="*6-16" value="@Model.Password" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">确认密码</label>
+                    <div class="col-sm-5">
+                        <input type="password" id="pwd2" name="Password1" class="form-control" datatype="*" recheck="Password" value="@Model.Password" />
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">姓名</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="FullName" class="form-control" value="@Model.FullName" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">电话号码</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="PhoneNumber" class="form-control" datatype="m" ignore="ignore" errormsg="请输入正确的手机号码" value="@Model.PhoneNumber" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Email</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="Email" class="form-control" datatype="e" ignore="ignore" errormsg="请输入正确的Email地址" value="@Model.Email" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">联系地址</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="Contact" class="form-control" value="@Model.Contact" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-sm" id="cancel" data-dismiss="modal">关闭</button>
+            <button type="submit" class="btn btn-primary btn-sm" id="sure">保存</button>
+        </div>
+    </form>
+</div>
+<script>
+    function readyAjaxForm(_dialog) {
+        $("#form1").Validform({
+            tiptype: 3,
+            beforeSubmit: function () {
+                $("#form1").ajaxSubmit({
+                    beforeSubmit: function (formData, jqForm, options) {
+
+                    },
+                    success: function (data, textStatus) {
+                        var options = {
+                            layout: "top",
+                            text: data.message,
+                            type: "success"
+                        };
+                        noty(options);
+                        _dialog.modal.close();
+                    },
+                    error: function (data, status, e) { },
+                    url: "/User/Edit/?timestamp=" + new Date().getTime(),
+                    type: "post",
+                    dataType: "json",
+                    timeout: 600000
+                });
+                return false;
+            }
+        });
+    }
+</script>

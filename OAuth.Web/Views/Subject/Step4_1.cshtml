@@ -1,0 +1,442 @@
+﻿@{
+    ViewBag.Title = "买卖合同";
+    Layout = null;
+}
+@model IEnumerable<Contract>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>买卖合同</title>
+    <link href="~/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/assets/css/dashboard.css" rel="stylesheet" />
+    <link href="~/assets/css/base_inner.css" rel="stylesheet" />
+    <link href="~/assets/css/iconfont.css" rel="stylesheet" />
+    <link href="~/assets/css/jquery.noty.css" rel="stylesheet" />
+    <link href="~/assets/css/noty_theme_default.css" rel="stylesheet" />
+    <link href="~/assets/css/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <form class="form-inline aui form-wizard" action="" id="contract_form" method="post">
+        <div class="mod-navbar">
+            <div class="main-header">
+                <div class="title">
+                    <h3>
+                        <a href="javascript:;"><i class="icon icon-list"></i></a>
+                        <a href="javascript:;">买卖合同</a>
+                    </h3>
+                </div>
+            </div>
+            <div class="sub">
+                <div class="sub_toolbar">
+                    <button class="btn btn-default" id="btn_pdf">导出pdf</button>
+                    <button class="btn btn-default" onclick='javascript:window.location.href="/subject/index"'>返回</button>
+                </div>
+            </div>
+        </div>
+        <div class="navigator-content">
+            <div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+                <div class="frame">
+                    <div class="frame-header">
+                        <span class="title-breadcrumb">
+                            <a href="javascript:;">买卖合同</a>
+                        </span>
+                    </div>
+                    @*<hr class="m0"></hr>*@
+                    <div class="widget widget-mytask">
+                        <div class="frame-body">
+                            <div class="list-inline">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>卖方：</th>
+                                            <th colspan="5">@ViewBag.Supplier.SupplierName</th>
+                                            <th colspan="2">合同编号：</th>
+                                            <th colspan="4">@ViewBag.Item.ItemNo</th>
+                                        </tr>
+                                        <tr>
+                                            <th>买方：</th>
+                                            <th colspan="5"></th>
+                                            <th colspan="2">合同签订地：</th>
+                                            <th colspan="4">@ViewBag.Item.SignPlace</th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="6"></th>
+                                            <th colspan="2">签订时间：</th>
+                                            <th colspan="4">@ViewBag.Item.SignTime.ToString("yyyy年MM月dd日")</th>
+                                        </tr>
+                                        <tr>
+                                            <th>品名</th>
+                                            <th>材质</th>
+                                            <th>规格</th>
+                                            <th>长度</th>
+                                            <th>标准</th>
+                                            <th>数量</th>
+                                            <th>单位</th>
+                                            <th>吨位</th>
+                                            <th>单价（元）</th>
+                                            <th>合计金额（元）</th>
+                                            <th>计重方式</th>
+                                            <th>备注</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr class="lt">
+                                                <th scope="row">@item.Name</th>
+                                                <td>@item.Texture</td>
+                                                <td>@item.Spec</td>
+                                                <td>@item.Extent</td>
+                                                <td>@item.Norm</td>
+                                                <td>@item.Amount</td>
+                                                @*<td>@item.Unit</td>*@
+                                                <td>
+                                                    <select class="unit">
+                                                        <option>支</option>
+                                                        <option>件</option>
+                                                        <option>套</option>
+                                                        <option>张</option>
+                                                        <option>个</option>
+                                                        <option>米</option>
+                                                        <option>箱</option>
+                                                        <option>组</option>
+                                                    </select>
+                                                </td>
+                                                <td>@item.TotalWeight</td>
+                                                <td><input type="text" class="form-control price" style="width:100px" autocomplete="off" data-id="@item.ID" data-price="@item.Price" data-mode="@item.TempMode" data-amount="@item.Amount" data-weight="@item.TotalWeight" datatype="n" value="@item.Price" /></td>
+                                                <td>@item.TotalPrice</td>
+                                                <td>@item.PriceUnit</td>
+                                                <td><input type="text" class="form-control memo" style="width:100px" autocomplete="off" value="@item.Memo" /></td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td colspan="12">
+                                                一、执行标准：
+                                                <select class="norm">
+                                                    <option>国标</option>
+                                                    <option>双50标准</option>
+                                                    <option>正偏差</option>
+                                                    <option>自定义</option>
+                                                </select>
+                                                <input type="text" id="norm" style="display:none;" autocomplete="off" name="norm" datatype="*" class="form-control w300" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="12">二、随货的单证及资料：<input type="text" id="data" name="data" autocomplete="off" datatype="*" class="form-control w300" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="12">三、包装方式：按国家标准。</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="12">四、交货地点：<input type="text" id="place" name="place" autocomplete="off" datatype="*" class="form-control w300" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="12">五、交货期：<input type="text" id="date" name="date" autocomplete="off" datatype="*" class="form-control w300" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="12">
+                                                六、计重方式：
+                                                <select id="weight" name="weight">
+                                                    <option>检尺+过磅</option>
+                                                    <option>检尺</option>
+                                                    <option>过磅</option>
+                                                    <option>计件</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="12">七、检验期间：自收货之日起一月内，买方应按合同第一、第二、第三条的约定对货物(包括数量、质量及随货凭证)进行检验，如货物不符合同约定，<br />买方应向卖方提出书面异议；若出现质量问题，卖方负责包退包换，产生的一切费用由卖方负担。</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="12">
+                                                八、结算方式：
+                                                <input type="text" id="mode"  autocomplete="off" datatype="*" class="form-control w300" />
+                                                @*<select class="mode">
+                                                    <option>货物检验合格并出具17%增值税发票</option>
+                                                    <option>款到发货</option>
+                                                    <option>货到付款</option>
+                                                    <option>部分自定义</option>
+                                                    <option>自定义</option>
+                                                </select>
+                                                <label class="lb_mode" style="display:none;">如付承兑，每吨加</label><input type="text" id="mode" style="display:none;" name="mode" autocomplete="off" datatype="*" class="form-control w300" /><label class="lb_mode" style="display:none;">元</label>*@
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="12">
+                                                九、运费负担：
+                                                <select id="freight" name="freight">
+                                                    <option>卖方承担，一票到厂</option>
+                                                    <option>卖方承担，两票到厂</option>
+                                                    <option>买方承担，一票到厂</option>
+                                                    <option>买方承担，两票到厂</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="12">十、违约责任：1、若卖方不按期交货，每延期一天卖方应支付合同总额1%的违约金。<br />2、卖方交付的货物不符合合同的约定(包括产品名称、规格、数量、质量等),买方有权解除合同并要求卖方支付合同总额30%的违约金，<br />若买方实际损失大于该金额则卖方应赔偿买方的实际损失。</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="12">十一、纠纷的解决方式：若买卖双方履行本合同发生争议，双方协商解决。若协商不成，则向胶州市人民法院起诉。</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="12">十二、本合同未尽事宜，按《中华人民共和国合同法》执行。</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="12">十三、本合同一式两份，双方各执一份，合同自双方签字盖章之日起生效，传真件有效，手写无效</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">卖方：</td>
+                                            <td colspan="4">@ViewBag.Supplier.SupplierName</td>
+                                            <td colspan="2">买方：</td>
+                                            <td colspan="4">
+                                                <select id="client" name="client">
+                                                    @foreach (var item in @ViewBag.list)
+                                                    {
+                                                        <option value="@item.Id">@item.PurchaserName</option>
+                                                    }
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">单位名称(章) ：</td>
+                                            <td colspan="4"></td>
+                                            <td colspan="2">单位名称(章) ：</td>
+                                            <td colspan="4"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">单位地址：</td>
+                                            <td colspan="4">@ViewBag.Supplier.Address</td>
+                                            <td colspan="2">单位地址：</td>
+                                            <td colspan="4" id="ads"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">法定代表人：</td>
+                                            <td colspan="4">@ViewBag.Supplier.LegalPerson</td>
+                                            <td colspan="2">法定代表人：</td>
+                                            <td colspan="4" id="lp"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">委托代理人：</td>
+                                            <td colspan="4">@ViewBag.Supplier.EntrustPerson</td>
+                                            <td colspan="2">委托代理人：</td>
+                                            <td colspan="4" id="ep"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">传真电话：</td>
+                                            <td colspan="4">@ViewBag.Supplier.Fax</td>
+                                            <td colspan="2">传真电话：</td>
+                                            <td colspan="4" id="fax"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">开户银行：</td>
+                                            <td colspan="4">@ViewBag.Supplier.BankName</td>
+                                            <td colspan="2">开户银行：</td>
+                                            <td colspan="4" id="be"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">账号：</td>
+                                            <td colspan="4">@ViewBag.Supplier.BankNo</td>
+                                            <td colspan="2">账号：</td>
+                                            <td colspan="4" id="bn"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar right">
+            <div class="sidebar-loading"></div>
+            <div class="sidebar-panel-wrapper">
+                <div class="sidebar-content"></div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+<script type="text/template" id="delete-tmpl">
+    <div class="modal-content">
+        <form class="form-horizontal aui" id="add_user_form" action="/User/Add" method="post">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h3>合同下载</h3>
+            </div>
+            {{html file}}
+        </form>
+    </div>
+</script>
+<script src="~/assets/js/jquery-1.10.2.min.js"></script>
+<script src="~/assets/js/bootstrap.min.js"></script>
+<script src="~/assets/js/respond.min.js"></script>
+<script src="~/assets/js/docs.min.js"></script>
+<script src="~/assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="~/assets/js/jquery.noty.js"></script>
+<script src="~/assets/js/dialog.js"></script>
+<script src="~/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="~/assets/bower_components/icheck/icheck.min.js"></script>
+<script src="~/assets/js/jquery.sidebar.js"></script>
+<script src="~/assets/js/jquery.tmpl.min.js"></script>
+<script src="~/assets/js/popbox.js"></script>
+<script src="~/assets/js/Validform_v5.3.2_min.js"></script>
+<script language="javascript">
+    $("#contract_form").Validform({tiptype: 3, btnSubmit: "#btn_pdf",callback: function(){
+        var lt = [];
+        //var mode;
+        $(".lt").each(function (i, p) {
+            var rw = [];
+            rw.push($(p).find(".price").data("id"),$(p).find(".price").val(),$(p).find(".memo").val(),$(p).find(".unit").val());
+            lt.push(rw);
+        });
+
+        //if($(".mode").find("option:selected").text()==="部分自定义"){
+        //    mode = "如付承兑，每吨加"+$("#mode").val()+"元";
+        //}else{
+        //    mode=$("#mode").val();
+        //}
+
+        $.post("/subject/downloadcontract", { id: @ViewBag.Item.Id, it: @ViewBag.Supplier.Id, norm: $("#norm").val(),weight:$("#weight").val(),mode:$("#mode").val(),freight:$("#freight").val(),client:$("#client").val(),place:$("#place").val(),date:$("#date").val(),data:$("#data").val(),lt:lt}, function (data) {
+            var item = data.name.split(",");
+            var st = '<a class="btn btn-success" href="/subject/downfile?filename='+item[0]+'">合同点击下载</a><br/>';
+            if (item.length===2) {
+                st = st + '<br/><a class="btn btn-success" href="/subject/downfile?fileName='+item[1]+'">附件点击下载</a>';
+            }
+            var tmpl = $("#delete-tmpl").tmpl({ file : st});
+            $.dialog({
+                content: tmpl,
+                width: "300px",
+                height: "200px",
+                init: function() {
+
+                },
+                sure: function () {
+                    var dialog = this;
+                    dialog.modal.close();
+                    return false;
+                }
+            });
+        });
+        return false;
+    }});
+
+    $(function () {
+        if ($(".frame-body>.line-item-container").length > 0) {
+            $(".frame-body>.line-item-container").mCustomScrollbar({ axis: "x", theme: "dark" });
+        }
+        $("#norm").val($(".norm").find("option:selected").text());
+        //$("#mode").val($(".mode").find("option:selected").text());
+        $("#client").trigger("change");
+
+        @*$("#btn_pdf").on("click", function () {
+            var priceArr = [];
+            var mode;
+            $(".price").each(function (i, p) {
+                priceArr.push($(p).data("id")+","+$(p).val());
+            });
+            if($(".mode").find("option:selected").val()===4){
+                mode = "如付承兑，每吨加"+$("#mode").val()+"元";
+            }else{
+                mode=$("#mode").val();
+            }
+
+            $.post("/subject/downloadcontract", { id: @ViewBag.Item.Id, it: @ViewBag.Supplier.Id, norm: $("#norm").val(),weight:$("#weight").val(),mode:mode,freight:$("#freight").val(),client:$("#client").val(),place:$("#place").val(),date:$("#date").val(),arr:priceArr}, function (data) {
+                var st = '<a href="/subject/DownFile?fileName='+data.name+'">点击下载</a>';
+                var tmpl = $("#delete-tmpl").html();
+                $.dialog({
+                    content: tmpl.tmpl(st),
+                    width: "400px",
+                    init: function() {
+
+                    },
+                    sure: function () {
+                        var dialog = this;
+                        dialog.modal.close();
+                        return false;
+                    }
+                });
+            });
+        });*@
+
+        $("#client").on("change",function(){
+            var that = $(this);
+            $.post("/purchaser/get", { id: that.val()}, function (data) {
+                $("#ads").html(data.ads);
+                $("#lp").html(data.lp);
+                //$("#ep").html(data.ep);
+                $("#fax").html(data.fax);
+                $("#be").html(data.be);
+                $("#bn").html(data.bn);
+            });
+        });
+
+        $(".norm").on("change",function(){
+            var that = $(this);
+            if (that.find("option:selected").text()==="自定义") {
+                $("#norm").css("display","");
+                $("#norm").val("");
+            }
+            else
+            {
+                $("#norm").css("display","none");
+                $("#norm").val(that.find("option:selected").text());
+            }
+        });
+
+        $(".price").on("change",function(){
+            var that = $(this);
+            if (isNaN(that.val())) {
+                that.parent().next().html("");
+                return false;
+            }
+            if (parseFloat(that.data("price"))<parseFloat(that.val())) {
+                $.noty({
+                    text: '物料价格只允许下调！',
+                    layout: 'topCenter',
+                    type: 'information'
+                });
+                that.val(that.data("price"));
+                return false;
+            } else { 
+                //if (that.data("mode")=="2") {
+                //    that.parent().next().html(parseFloat(that.val())*parseFloat(that.data("amount")));
+                //}
+                //else{
+                //    that.parent().next().html(parseFloat(that.val())*parseFloat(that.data("weight")));
+                //}
+                that.parent().next().html(parseFloat(that.val())*parseFloat(that.data("weight")));
+            }
+        });
+
+        //$(".mode").on("change",function(){
+        //    var that = $(this);
+        //    if (that.find("option:selected").text()==="部分自定义") {
+        //        $("#mode").val("");
+        //        $(".lb_mode").css("display","");
+        //        $("#mode").css("display","");
+        //    }
+        //    else if (that.find("option:selected").text()==="自定义") {
+        //        $("#mode").val("");
+        //        $("#mode").css("display","");
+        //        $(".lb_mode").css("display","none");
+        //    }
+        //    else
+        //    {
+        //        $(".lb_mode").css("display","none");
+        //        $("#mode").css("display","none");
+        //        $("#mode").val(that.find("option:selected").text());
+        //    }
+        //});
+    });
+</script>

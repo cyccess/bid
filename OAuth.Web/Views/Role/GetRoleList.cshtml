@@ -1,0 +1,13 @@
+﻿@{
+    Layout = null;
+}
+@model IEnumerable<Role>
+
+<div id="roleList" class="list-group">
+    @{ int i = 0;}
+    @foreach (Role item in Model)
+    {
+        <a class="list-group-item @(i==0?"active":"")" href="javascript:void(0);" data-roleid="@item.Id">@item.Name</a>
+        i++;
+    }
+</div>

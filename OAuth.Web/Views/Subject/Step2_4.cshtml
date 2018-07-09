@@ -1,0 +1,305 @@
+﻿@{
+    ViewBag.Title = "管材询价单";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model PagedList<ItemMaterial>
+@section Head{
+    <link href="~/assets/bower_components/icheck/skins/minimal/red.css" rel="stylesheet" />
+    <link href="~/assets/css/uploadify.css" rel="stylesheet" />
+}
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-list"></i></a>
+                <a href="javascript:;">管材询价单</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <div class="sub_toolbar">
+            <input class="btn btn-danger" type="button" @(ViewBag.entity.IsNotice?"disabled='disabled'":"") value="邮件通知">
+            <input class="btn btn-default" type="button" onclick="locator.openEdit(this, { option: 1, id: -1 })" value="添加物料">
+            <input class="btn btn-default" type="button" onclick="locator.openEdit(this, { option: 2, id: @ViewBag.entity.Id })" value="上传管材询价单">
+            <input class="btn btn-default" type="button" onclick="uv.js_materiel_remove(this)" value="删除">
+            <a class="btn btn-default" id="cancel" href="/subject/index">返回</a>
+        </div>
+    </div>
+</div>
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="frame">
+        <div class="frame-header">
+            <span class="title-breadcrumb">
+                <a href="javascript:;">管材询价单</a>
+            </span>
+        </div>
+        <hr class="m0" />
+        <div class="widget widget-mytask">
+            <div class="frame-body">
+                <div class="line-item-container ">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>选择</th>
+                                <th>名称</th>
+                                <th>类别</th>
+                                <th>报价数量</th>
+                                <th>状态</th>
+                                <th>规格</th>
+                                <th>材质</th>
+                                <th>标准</th>
+                                <th>长度(米)</th>
+                                <th>数量(支)</th>
+                                <th>总重(T)</th>
+                                <th>实际到厂单价</th>
+                                <th>到货时间</th>
+                                <th>价格为理计/磅计</th>
+                                <th>是否承兑/现款</th>
+                                <th>货到付款/款到发货/预付款</th>
+                                <th>是否含税</th>
+                                <th>报价有效期</th>
+                                <th>备注</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td><input type="checkbox" value="@item.Id"></td>
+                                    <th scope="row"><a href="javascript:;" onclick="locator.openEdit(this, { option: 1, id: @item.Id, status: @(Convert.ToInt32(item.IsEnabled)) })">@item.Name</a></th>
+                                    <td>@item.Mode</td>
+                                    <td>@item.ItemQuotes.Count()</td>
+                                    <td>
+                                        @if (item.IsEnabled)
+                                        {
+                                            <span class="text-success">正常</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">作废</span>
+                                        }
+                                    </td>
+                                    <td>@item.Spec</td>
+                                    <td>@item.Texture</td>
+                                    <td>@item.Norm</td>
+                                    <td>@item.Extent</td>
+                                    <td>@item.Sum</td>
+                                    <td>@item.TotalWeight</td>
+                                    <td>@item.RealPrice</td>
+                                    <td>@item.ReachTime</td>
+                                    <td>@item.PriceUnit</td>
+                                    <td>@item.PriceMode</td>
+                                    <td>@item.PayMode</td>
+                                    <td>@item.IsTax</td>
+                                    <td>@item.Term</td>
+                                    <td>@item.Memo</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "page", ContainerTagName = "ul", CssClass = "pagination", CurrentPagerItemTemplate = "<li class=\"active\"><a href=\"#\">{0}</a></li>", DisabledPagerItemTemplate = "<li class=\"disabled\"><a>{0}</a></li>", PagerItemTemplate = "<li>{0}</li>", Id = "bootstrappager" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="sidebar right">
+    <div class="sidebar-loading"></div>
+    <div class="sidebar-panel-wrapper">
+        <div class="sidebar-content"></div>
+    </div>
+</div>
+
+<script type="text/x-jquery-tmpl" id="step2_1_edit">
+    <div class="sidebar-panel-header">
+        <a href="javascript:;" class="name" onclick="javascript:;">
+            <i class="icon icon-friend"></i>
+            型材询价单
+        </a>
+
+        <ul class="nav nav-pills">
+            <li class="divider"></li>
+            <li>
+                <a href="javascript:;" class="js-close" title="关闭">
+                    <i class="icon icon-close"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="sidebar-panel-body height-nonav">
+        <div class="content mCustomScrollbar">
+            <div class="entry-well-content">
+                <form class="user-add-form aui" id="form1" action="/Subject/EditMaterial" method="post">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="control-label">类别</label>
+                            <input type="text" name="Mode" class="form-control" datatype="*" autocomplete="off" value="${Mode}" />
+                            <input type="hidden" id="Id" name="Id" value="${Id}" />
+                            <input type="hidden" id="Id" name="IsEnabled" value="${IsEnabled}" />
+                            <input type="hidden" id="ItemId" name="ItemId" value="@ViewBag.entity.Id" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">名称</label>
+                            <input type="text" name="Name" class="form-control" datatype="*" autocomplete="off" value="${Name}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">规格</label>
+                            <input type="text" name="Spec" class="form-control" autocomplete="off" value="${Spec}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">材质</label>
+                            <input type="text" name="Texture" class="form-control" autocomplete="off" value="${Texture}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">标准</label>
+                            <input type="text" name="Norm" class="form-control" autocomplete="off" value="${Norm}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">长度(米)</label>
+                            <input type="text" name="Extent" class="form-control" autocomplete="off" datatype="n" value="${Extent}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">数量(支)</label>
+                            <input type="text" name="Sum" class="form-control" autocomplete="off" datatype="n" value="${Sum}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">总重(T)</label>
+                            <input type="text" name="TotalWeight" class="form-control" autocomplete="off" datatype="n" value="${TotalWeight}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">实际到厂单价</label>
+                            <input type="text" name="RealPrice" class="form-control" autocomplete="off" datatype="n" value="${RealPrice}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">到货时间</label>
+                            <input type="text" name="ReachTime" class="form-control" autocomplete="off" value="${ReachTime}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">价格为理计/磅计</label>
+                            <input type="text" name="PriceUnit" class="form-control" autocomplete="off" value="${PriceUnit}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">是否承兑/现款</label>
+                            <input type="text" name="PriceMode" class="form-control" autocomplete="off" value="${PriceMode}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">货到付款/款到发货/预付款</label>
+                            <input type="text" name="PayMode" class="form-control" autocomplete="off" value="${PayMode}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">是否含税</label>
+                            <input type="text" name="IsTax" class="form-control" autocomplete="off" value="${IsTax}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">报价有效期</label>
+                            <input type="text" name="Term" class="form-control" autocomplete="off" value="${Term}" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">备注</label>
+                            <textarea name="Memo" class="form-control" autocomplete="off" datatype="s0-15" errormsg="备注字符范围在15个字符之间！">${Memo}</textarea>
+                        </div>
+                        <div class="form-group text-right">
+                            <button type="submit" class="btn btn-success btn-sm" id="sure">保存</button>
+                            <button type="button" class="btn btn-default btn-sm" id="cancel">取消</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<script type="text/x-jquery-tmpl" id="materiel_remove">
+    <div class="popbox">
+        <div class="popbox-header">
+            <button class="cancel icon-remove">&times;</button>
+            <h3>删除物料</h3>
+        </div>
+        <div class="popbox-body w_300">
+            删除物料记录后，将不能恢复！
+        </div>
+        <div class="popbox-footer">
+            <button class="btn btn-danger mr_15" id="sure">确定删除 </button>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="file_upload">
+    <div class="sidebar-panel-header">
+        <a href="javascript:;" class="name" onclick="javascript:;">
+            <i class="icon icon-friend"></i>
+            模板上传
+        </a>
+
+        <ul class="nav nav-pills">
+            <li class="divider"></li>
+            <li>
+                <a href="javascript:;" class="js-close" title="关闭">
+                    <i class="icon icon-close"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="sidebar-panel-body height-nonav">
+        <div class="content mCustomScrollbar">
+            <div class="entry-well-content">
+                <input type="file" id="uploadify" name="uploadify" />
+                <p>
+                    <input type="button" class="btn btn-default" id="btn_upload" value="上传" />
+                    <input type="button" class="btn btn-default" value="取消上传" onclick="javascript:$('#uploadify').uploadifyClearQueue()" />
+                </p>
+            </div>
+        </div>
+    </div>
+</script>
+@section Script{
+    <script src="~/assets/js/Validform_v5.3.2_min.js"></script>
+    <script src="~/assets/widgets/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/assets/bower_components/icheck/icheck.min.js"></script>
+    <script src="~/assets/js/jquery.sidebar.js"></script>
+    <script src="~/assets/js/jquery.tmpl.min.js"></script>
+    <script src="~/assets/js/popbox.js"></script>
+    <script src="~/assets/js/step2_1.js"></script>
+    <script src="~/assets/js/jquery.form.js"></script>
+    <script src="~/assets/js/jquery.uploadify-3.1.min.js"></script>
+    <script src="~/assets/js/swfobject.js"></script>
+    <script language="javascript">
+            $(function () {
+                $(".btn-danger").on("click", function () {
+                    var that=$(this);
+                    $.ajax({
+                        type: "post",
+                        url: "/Subject/EmailNotice",
+                        data: { id: @ViewBag.entity.Id },
+                        beforeSend: function () {
+                            that.attr("disabled", "disabled");
+                            that.text("正在发送");
+                        },
+                        success: function (data) {
+                            if (data.code === 200) {
+                                that.text("邮件通知");
+                                $.noty({
+                                    text: data.message,
+                                    layout: 'topCenter',
+                                    type: 'information'
+                                });
+                            }
+                        },
+                        error: function () {
+                            that.attr("disabled", "");
+                            that.text("邮件通知");
+                            $.noty({
+                                text: '操作失败，请重新尝试！',
+                                layout: 'topCenter',
+                                type: 'information'
+                            });
+                        }
+                    });
+                });
+            });
+    </script>
+}

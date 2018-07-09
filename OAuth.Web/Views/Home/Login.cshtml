@@ -1,0 +1,55 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>系统登录</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8">
+    <link href="~/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="/assets/css/login.css" rel="stylesheet" type="text/css" />
+    <script src="/assets/js/jquery-1.10.2.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/placeholder.js"></script>
+    <script src="/assets/js/jquery.form.js"></script>
+    <script src="/assets/js/Validform_v5.3.2_min.js"></script>
+    <script src="/assets/js/login.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="bgimg" class="clearfix" style="background-image: url(/assets/images/login.jpg)">
+    </div>
+    <div class="login">
+        @{
+            using (Html.BeginForm("Login", "Home", FormMethod.Post, new { @class = "form-horizontal fc", role = "form", id = "login-form" }))
+            {
+                <div class="form-group has-feedback">
+                    <label for="" class="control-label sr-only"></label>
+                    <input type="text" class="form-control" id="inputName" name="UserName" placeholder="用户名" />
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <label for="" class="control-label sr-only"> </label>
+                    <input type="password" class="form-control" id="inputPassword" name="Password" autocomplete="off" placeholder="密码" />
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="form-group">
+                    <label for="" class="control-label sr-only"> </label>
+                    <select class="form-control" name="userType">
+                        <option value="1">供应商</option>
+                        <option value="2">系统管理员</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for=" " class="control-label sr-only"> </label>
+                    <div class="tips"></div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword" class="control-label sr-only"> </label>
+                    <button class="btn btn-primary btn-block" id="signIn">登录</button>
+                </div>
+            }
+        }
+    </div>
+</body>
+</html>

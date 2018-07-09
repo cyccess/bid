@@ -1,0 +1,70 @@
+﻿@{
+    Layout = null;
+}
+<div class="modal-content">
+    <form class="form-horizontal aui add-part-form" id="form1" action="/Module/Add" method="post">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>新建模块</h3>
+        </div>
+        <div class="modal-body">
+            <fieldset>
+                <input type="hidden" name="appid" value="@ViewBag.AppId"/>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">模块名称</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="ModuleName" class="form-control" datatype="*" />
+                        <span class="Validform_checktip"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">链接地址</label>
+                    <div class="col-sm-5">
+                        <input type="text" id="pwd1" name="ModuleUrl" class="form-control" datatype="*" placeholder="例如：/Demo/Action" />
+                        <span class="Validform_checktip"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">上级模块</label>
+                    <div class="col-sm-5">
+                        <select class="form-control" id="ParentNo" name="ParentNo">
+                            <option value="0">请选择</option>
+                            @foreach (var item in Model as IEnumerable<ParentModule>)
+                            {
+                                <option value="@item.ModuleNo">@item.ModuleName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序编号</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="OrderSort" class="form-control" datatype="*" />
+                        <span class="Validform_checktip"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">模块图标</label>
+                    <div class="col-sm-5">
+                        <input type="text" name="ModuleIcon" class="form-control" />
+                        <span class="Validform_checktip"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">是否启用</label>
+                    <div class="col-sm-5 radio-panel">
+                        <input id="rdoStatus1" name="Status" type="radio" checked="checked" value="1" />
+                        <label class="radio-inline">是</label>
+                        <input id="rdoStatus2" name="Status" type="radio" value="0" />
+                        <label class="radio-inline">否</label>
+                    </div>
+                </div>
+            </fieldset>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default btn-sm" id="cancel" data-dismiss="modal">关闭</button>
+            <button type="submit" class="btn btn-primary btn-sm" id="sure">保存</button>
+        </div>
+    </form>
+</div>

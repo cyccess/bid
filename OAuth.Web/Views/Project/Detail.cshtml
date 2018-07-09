@@ -1,0 +1,230 @@
+﻿@{
+    ViewBag.Title = "角色 | " + Model.Project.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Head{
+    <link href="~/assets/bower_components/icheck/skins/minimal/red.css" rel="stylesheet" />
+}
+<input id="appid" type="hidden" value="@Model.CurrentProjectId" />
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-cascades"></i></a>
+                <a href="javascript:;">@Model.Project.Name</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <ul class="mod_subnav">
+            <li><a href="/Project/Detail/@Model.CurrentProjectId" class="active">角色</a></li>
+            <li><a href="/Module/Index/@Model.CurrentProjectId">模块</a></li>
+            <li><a href="/Permission/Index/@Model.CurrentProjectId">动作</a></li>
+        </ul>
+        <div class="sub_toolbar">
+            <button class="btn btn-success btn-sm" id="btnAdd"><i class="glyphicon glyphicon-plus"></i> 新建角色</button>
+        </div>
+    </div>
+</div>
+
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="entries-panel">
+        @foreach (var item in Model.RoleList as IEnumerable<Role>)
+        {
+            <div class="entry" part-id="@item.Id">
+                <div class="entry-header">
+                    <div class="entry-header-title">
+                        <h4>@item.Name</h4>
+                    </div>
+                    <a href="javascript:;" class="entry-header-menu" data-partid="@item.Id" data-projectid="@item.ProjectId">
+                        <i class="icon icon-roundright"></i>
+                    </a>
+                </div>
+                <div class="entity-content">
+
+                </div>
+                <div class="entry-footer">
+                    <a href="javascript:;" class="js-set-permission" data-roleid="@item.Id" data-projectid="@item.ProjectId">+ 设置权限</a>
+                </div>
+
+            </div>
+        }
+
+        <div class="entry-new">
+            <a href="javascript:;" class="permission-add" data-project-id="@Model.Project.Id">
+                <i class="icon icon-roundaddfill"></i>
+                新建角色
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<div class="sidebar right">
+    <div class="sidebar-loading"></div>
+    <div class="sidebar-panel-wrapper"></div>
+</div>
+
+<script type="text/template" id="part_header_menu">
+    <div class="popbox">
+        <ul class="popbox-step">
+            <!-- switchDefault -->
+        </ul>
+    </div>
+</script>
+
+<script type="text/template" id="switchWhen_0">
+    <li class="popbox-step-li">
+        <div class="popbox-header">
+            <button class="cancel icon-remove">&times;</button>
+            <h3>列表选项</h3>
+        </div>
+        <div class="popbox-body">
+            <ul class="popbox-menu">
+                <li><a href="javascript:;" class="add" onclick="menuSwitch.fn.js_create_new()"><i class="icon icon-xx"></i>新建角色</a></li>
+                <li><a href="javascript:;" class="copy" onclick="menuSwitch.fn.js_step(1)"><i class="icon icon-xx"></i>复制</a></li>
+                <li><a href="javascript:;" class="rename" onclick="menuSwitch.fn.js_step(2)"><i class="icon icon-xx"></i>重命名</a></li>
+                <li class="divider"></li>
+                <li><a href="javascript:;" class="delete" onclick="menuSwitch.fn.js_step(3)"><i class="icon icon-delete"></i>删除</a></li>
+            </ul>
+        </div>
+    </li>
+</script>
+
+<script type="text/template" id="switchWhen_1">
+    <li class="popbox-step-li">
+        <div class="popbox-header">
+            <button class="back icon icon-back" onclick="menuSwitch.fn.js_step(0)"></button>
+            <button class="cancel icon-remove">&times;</button>
+            <h3>复制角色</h3>
+        </div>
+        <form class="wt-form" id="part-copy-form">
+            <div class="popbox-body">
+                <div class="form-group">
+                    <label>名称：</label>
+                    <div>
+                        <input type="text" class="form-control" name="Name" placeholder="角色名" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>描述：</label>
+                    <div>
+                        <textarea class="form-control" name="Description" placeholder="角色描述"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="popbox-footer">
+            <button class="btn btn-success mr_15" onclick="menuSwitch.fn.js_copy()">确定</button>
+            <button class="btn btn-default cancel">取消</button>
+        </div>
+    </li>
+</script>
+
+<script type="text/template" id="switchWhen_2">
+    <li class="popbox-step-li">
+        <div class="popbox-header">
+            <button class="back icon icon-back" onclick="menuSwitch.fn.js_step(0)"></button>
+            <button class="cancel icon-remove">&times;</button>
+            <h3>重命名角色</h3>
+        </div>
+        <form class="wt-form" id="part-rename-form">
+            <div class="popbox-body">
+                <input class="form-control" name="Name" placeholder="角色名" />
+            </div>
+        </form>
+        <div class="popbox-footer">
+            <button class="btn btn-success mr_15" onclick="menuSwitch.fn.js_rename()">确定</button>
+            <button class="btn btn-default cancel">取消</button>
+        </div>
+    </li>
+</script>
+
+<script type="text/template" id="switchWhen_3">
+    <li class="popbox-step-li">
+        <div class="popbox-header">
+            <button class="back icon icon-back" onclick="menuSwitch.fn.js_step(0)"></button>
+            <button class="cancel icon-remove">&times;</button>
+            <h3>删除角色</h3>
+        </div>
+        <div class="popbox-body w_300">
+            角色删除后，角色权限将会一并删除 。
+        </div>
+        <div class="popbox-footer">
+            <button class="btn btn-danger mr_15" onclick="menuSwitch.fn.js_delete()">确定删除 </button>
+        </div>
+    </li>
+</script>
+
+<script type="text/template" id="part_item_delete">
+    <div class="popbox">
+        <div class="popbox-header">
+            <button class="cancel icon-remove">&times;</button>
+            <h3>删除角色</h3>
+        </div>
+        <div class="popbox-body w_300">
+              角色删除后，角色权限将会一并删除 。 
+        </div>
+        <div class="popbox-footer">
+            <button class="btn btn-danger mr_15" id="sure">确定删除 </button>
+        </div>
+    </div>
+</script>
+<script type="text/template" id="add_part_item">
+    <div class="m_10">
+        <form name="add_part_form" class="wt-form add-part" action="/Role/Add" role="form">
+            <div class="form-group">
+                <label>名称：</label>
+                <div>
+                    <input type="text" class="form-control" name="Name" placeholder="输入角色名称" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>描述：</label>
+                <div>
+                    <textarea class="form-control" name="Description" placeholder="输入角色描述"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success mr_15" id="sure">保存 </button>
+                <button class="btn" id="cancel">取消</button>
+            </div>
+        </form>
+    </div>
+</script>
+<script type="text/template" id="new_part_item">
+    <div class="entry" part-id="${Id}">
+        <div class="entry-header">
+            <div class="entry-header-title">
+                <h4>${Name}</h4>
+            </div>
+            <a href="javascript:;" class="entry-header-menu" data-partid="${Id}" data-projectid="${ProjectId}">
+                <i class="icon icon-roundright"></i>
+            </a>
+        </div>
+        <div class="entity-content">
+
+        </div>
+        <div class="entry-footer">
+            <a href="javascript:;" class="js-set-permission" data-roleid="${Id}" data-projectid="${ProjectId}">+ 设置权限</a>        
+        </div>
+    </div>
+</script>
+@section script{
+    <script src="~/assets/js/Validform_v5.3.2.js"></script>
+    <script src="~/assets/bower_components/icheck/icheck.min.js"></script>
+    <script src="~/assets/js/jquery.tmpl.min.js"></script>
+    <script src="~/assets/js/jquery.sidebar.js"></script>
+    <script src="~/assets/js/popbox.js"></script>
+    <script src="~/assets/js/permission.js"></script>
+    <script>
+        $(function () {
+            $.permission.init();
+
+            $(document).on("click", ".entry-header-menu", function () {
+                $.menuSwitch(this);
+                return false;
+            });
+        });
+    </script>
+}

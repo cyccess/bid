@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "供应商";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IPagedList<Supplier>
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-list"></i></a>
+                <a href="javascript:;">供应商</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <div class="sub_toolbar">
+           
+        </div>
+    </div>
+</div>
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="frame">
+        <div class="frame-header">
+            <span class="title-breadcrumb">
+                <a href="javascript:;">供应商列表</a>
+            </span>
+            <div class="pull-right">
+                <form class="form-inline">
+                    <!-- Single button -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mode-name">@ViewBag.ModeName</span> <span class="caret"></span>
+                        </button>
+                        <input name="ModeId" type="hidden" />
+                        <ul class="dropdown-menu" style="height:350px;overflow-y:auto;">
+                            <li><a href="javascript:;" data-value="0">全部</a></li>
+                            @foreach (var item in ViewBag.Modes as IEnumerable<Mode>)
+                            {
+                                <li><a href="javascript:;" data-value="@item.Id">@item.ModeName</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <input class="form-control input-sm" name="SupplierName" value="@Request["SupplierName"]" placeholder="供应商名称" />
+                    <button class="btn btn-default btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i> 查询</button>
+                </form>
+            </div>
+        </div>
+        <hr class="m0" />
+        <div class="widget widget-mytask">
+            <div class="frame-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            @*<th>#</th>*@
+                            <th>供应商名称</th>
+                            <th>邮箱</th>
+                            <th>联系人</th>
+                            <th>联系电话</th>
+                            <th>联系手机</th>
+                            <th>是否激活</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var supplier in Model)
+                        {
+                            <tr>
+                                @*<th scope="row">@supplier.Id</th>*@
+                                <td><a href='/Supplier/Detail/@supplier.Id'>@supplier.SupplierName</a></td>
+                                <td>@supplier.Email</td>
+                                <td>@supplier.UserName</td>
+                                <td>@supplier.FixedPhone</td>
+                                <td>@supplier.MobilePhone</td>
+                                <td>
+                                    @{
+                                        if (supplier.IsActivated)
+                                        {
+                                            <span class="text-success">已激活</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">未激活</span>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @if (!supplier.IsEnabled)
+                                    {
+                                        <span class="text-muted">禁用</span>
+
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success">启用</span>
+                                    }
+                                </td>
+                            </tr>
+                                        }
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "id", ContainerTagName = "ul", CssClass = "pagination", CurrentPagerItemTemplate = "<li class=\"active\"><a href=\"#\">{0}</a></li>", DisabledPagerItemTemplate = "<li class=\"disabled\"><a>{0}</a></li>", PagerItemTemplate = "<li>{0}</li>", Id = "bootstrappager" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Script{
+    <script>
+        $(function () {
+
+            $(".dropdown-menu>li>a").on("click", function () {
+                var $that = $(this);
+                var modelId = $that.data("value");
+
+                $that.parent().parent().prev().val(modelId);
+                $that.parent().parent().prev().prev().find('span[class="mode-name"]').text($that.text());
+            });
+        })
+    </script>
+}

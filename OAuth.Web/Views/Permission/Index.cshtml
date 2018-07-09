@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "动作 | " + Model.CurrentProject.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-cascades"></i></a>
+                <a href="javascript:;">@Model.CurrentProject.Name</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <ul class="mod_subnav">
+            <li><a href="/Project/Detail/@Model.CurrentProject.Uniqueid.ToString("N")">角色</a></li>
+            <li><a href="/Module/Index/@Model.CurrentProject.Uniqueid.ToString("N")">模块</a></li>
+            <li><a href="/Permission/Index/@Model.CurrentProject.Uniqueid.ToString("N")" class="active">动作</a></li>
+        </ul>
+        <div class="sub_toolbar">
+            <button class="btn btn-success btn-sm" id="btnAdd"><i class="glyphicon glyphicon-plus"></i> 新建动作</button>
+        </div>
+    </div>
+</div>
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="frame">
+        <div class="frame-header">
+            <span class="title-breadcrumb">
+                <a href="javascript:;">动作</a>
+            </span>
+        </div>
+        <hr class="m0" />
+        <div class="widget widget-mytask">
+            <div class="body">
+                <div class="line-item-container">
+                    @foreach (var item in Model.PageList as PagedList<Permission>)
+                    {
+                        <div class="item-style">
+                            <div class="entry-item-main">
+                                <a href="javascript:;" class="entry-item-title">@item.PermissionName</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="text-center">
+                    @Html.Pager(Model.PageList as PagedList<Permission>, new PagerOptions { PageIndexParameterName = "pageIndex", ContainerTagName = "ul", CssClass = "pagination", CurrentPagerItemTemplate = "<li class=\"active\"><a href=\"#\">{0}</a></li>", DisabledPagerItemTemplate = "<li class=\"disabled\"><a>{0}</a></li>", PagerItemTemplate = "<li>{0}</li>", Id = "bootstrappager" })
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Script{
+    <script src="~/assets/js/jquery.form.js"></script>
+    <script src="~/assets/js/Validform_v5.3.2_min.js"></script>
+    <script>
+        $(function () {
+            $('#btnAdd').click(function (e) {
+                e.preventDefault();
+                $.get("/Permission/Add", function (content) {
+                    $.dialog({
+                        content: content,
+                        init: function () {
+                            readyAjaxForm(this);
+                        },
+                        sure: function () { return false; }
+                    });
+                });
+            });
+
+            $('.edit').click(function (e) {
+                var id = $(this).data("id");
+                $.get("/Permission/Edit", { id: id, v: new Date().getTime() }, function (content) {
+                    $.dialog({
+                        content: content,
+                        init: function () {
+                            readyAjaxForm(this);
+                        },
+                        sure: function () { return false; }
+                    });
+                });
+                e.preventDefault();
+            });
+
+
+            $('.del').click(function (e) {
+                var id = $(this).data("id");
+                layer.confirm("您确定要删除吗？", { title: "提示" }, function (index) {
+                    $.post("/Permission/Delete", { id: id }, function (data) {
+                        noty({
+                            layout: "top",
+                            text: data.message,
+                            type: "success"
+                        });
+                        layer.close(index);
+                    });
+                })
+                e.preventDefault();
+            });
+        });
+    </script>
+}

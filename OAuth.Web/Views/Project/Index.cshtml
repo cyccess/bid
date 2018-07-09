@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "项目";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-cascades"></i></a>
+                <a href="javascript:;">项目</a>
+                
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <div class="sub_toolbar">
+            <button class="btn btn-success btn-sm js-popbox">
+                <i class="glyphicon glyphicon-plus"></i> 创建项目
+            </button>
+        </div>
+    </div>
+</div>
+<div class="projects-panel navigator-results">
+    <div class="projects-panel-header">
+        <i class="icon icon-list"></i>
+        项目
+    </div>
+    <div class="project-grid">
+        @foreach (var item in Model.ProjectList)
+        {
+            <div class="project-item" data-pid="@item.Id">
+                <a href="javascript:;" class="star" title="">
+                    <i class="icon"></i>
+                </a>
+                <a href="/Project/Detail/@item.Uniqueid.ToString("N")" class="center">
+                    <i class="glyphicon glyphicon-inbox"></i>
+                    <h4>@item.Name</h4>
+                </a>
+            </div>
+        }
+    </div>
+
+    @*<div class="team in teams">
+            <div class="projects-panel-header">
+                <i class="icon icon-cascades"></i>
+                项目
+            </div>
+            <div class="project-grid">
+            @foreach (var item in Model.ProjectList)
+            {
+                <div class="project-item" data-pid="@item.Id">
+                    <a href="javascript:;" class="star @(item.IsCommonUsed ? "star-started" : "")" title="从常用项目移除">
+                        <i class="icon @(item.IsCommonUsed ? "icon-favorfill" : "icon-favor") "></i>
+                    </a>
+                    <a href="/Project/Detail/@item.Id" class="center">
+                        <i class="glyphicon glyphicon-inbox"></i>
+                        <h4 class="ng-binding">@item.Description</h4>
+                    </a>
+                </div>
+            }
+            </div>
+        </div>*@
+
+</div>
+
+
+<script type="text/template" id="add_project_temp">
+    <div class="popbox">
+        <div class="popbox-header">
+            <button class="cancel icon-remove">&times;</button>
+            <h3>创建项目</h3>
+        </div>
+        <form name="add_project_form" class="wt-form" role="form">
+            <div class="popbox-body w_300">
+                <div class="form-group">
+                    <label>名称：</label>
+                    <div>
+                        <input type="text" class="form-control" name="Name" placeholder="输入项目名称" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">链接地址</label>
+                    <div>
+                        <input type="text" name="LinkUrl" class="form-control" placeholder="链接地址" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>描述：</label>
+                    <div>
+                        <textarea class="form-control" name="Description" placeholder="输入项目描述"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="popbox-footer">
+            <button class="btn btn-success mr_15" id="sure">保存 </button>
+            <button class="btn">取消</button>
+        </div>
+    </div>
+</script>
+<script type="text/x-jquery-tmpl" id="project-item-tmpl">
+    <div class="project-item" data-pid="${Id}">
+        <a href="javascript:;" class="star">
+            <i class="icon"></i>
+        </a>
+        <a href="/Project/Detail/${Uniqueid}" class="center">
+            <i class="glyphicon glyphicon-inbox"></i>
+            <h4>${Name}</h4>
+        </a>
+    </div>
+</script>
+
+@section Script{
+    <script src="~/assets/js/jquery.tmpl.min.js"></script>
+    <script src="~/assets/js/popbox.js"></script>
+    <script>
+        $(function () {
+            $(".js-popbox").popbox({
+                content: $("#add_project_temp").html(),
+                init: function () {
+                    //
+                },
+                sure: function () {
+                    var that = this;
+                    $.post("/Project/Add", $(".wt-form").serialize(), function (data) {
+                        $("#project-item-tmpl").tmpl(data).appendTo(".project-grid");
+                        that.close();
+                    });
+                    return false;
+                }
+            });
+        });
+    </script>
+}

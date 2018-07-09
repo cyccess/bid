@@ -1,0 +1,17 @@
+﻿
+@if (SessionService.SessionInfo.UserType == UserType.User)
+{
+    <ul class="nav nav-sidebar main-meun">
+    @foreach (var item in SessionService.SessionInfo.Module)
+    {
+        <li><a href="@item.ModuleUrl"><i class="icon icon-cascades"></i>@item.ModuleName</a></li>
+    }
+    </ul>
+}
+else
+{
+    <ul class="nav nav-sidebar main-meun">
+        <li><a href="/Supplier/QuoteItemList"><i class="icon icon-pay"></i>工程竞价</a></li>
+        <li><a href="/Supplier/"><i class="icon icon-pay"></i>修改密码</a></li>
+    </ul>
+}

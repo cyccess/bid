@@ -1,0 +1,94 @@
+﻿ @charset "utf-8";
+/* CSS Document */
+
+img{vertical-align:middle;}
+
+.btn{height:42px;font-weight:bold;}
+
+.login{
+    position:absolute; 
+    top:30%;
+    left:30%;
+    z-index:5;
+    padding: 30px;
+    width:480px;
+    height:auto; 
+
+    background-color:rgba(0, 25, 41, 0.6);
+		  
+    background:transparent\9\0;  
+    background:transparent\0;  
+    *background:transparent; 
+    _background:transparent; 
+		
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#7000101a,endColorstr=#7000101a); 
+    zoom: 1;
+		  
+    -webkit-border-radius: 15px;
+	   -moz-border-radius: 15px;
+		    border-radius: 15px;
+
+}
+
+.login .logo-big{margin-bottom:30px;}
+
+#bgimg{
+		position:fixed;
+		top:0px;
+		left:0px;
+				
+		width:100%;
+		height:100%; 
+				 
+		overflow:hidden;
+
+        background:url(../herohot.jpg) no-repeat center center;
+        -webkit-background-size:cover;
+        -moz-background-size:cover;
+        -o-background-size:cover;
+        background-size:cover;
+}
+
+.login input:-moz-placeholder,
+.register input:-moz-placeholder {
+	color: #515567; 
+}
+.login input::-moz-placeholder,
+.register input::-moz-placeholder {
+	color: #515567; 
+	opacity: 1;
+}
+.login input:-ms-input-placeholder,
+.register input:-ms-input-placeholder
+	{
+	color: #515567;
+}
+.login input::-webkit-input-placeholder,
+.register input::-webkit-input-placeholder {
+	color: #515567;
+}
+.login input.placeholder,
+.register input.placeholder {
+	color: #515567;
+}
+
+.login .tips{line-height:26px;}
+
+.login .form-horizontal{width:228px;display:block;}
+.fc {margin-left:auto;margin-right:auto;clear:both;}
+
+.form-horizontal .has-feedback .form-control-feedback {right: 0;}
+
+/*==========以下部分是Validform必须的===========*/
+.Validform_checktip{overflow:hidden;color:#999;font-size:14px;padding-left:35px;}
+.Validform_right{display:none;color:#71b83d;padding-left:20px;background:url(/images/vlid-icons_02.png) no-repeat;}
+.Validform_wrong{color:#ff8900;white-space:nowrap;background:url(/images/ico100.png) no-repeat;}
+.Validform_loading{padding-left:20px;background:url(../images/onLoad.gif) no-repeat left center;}
+.Validform_error{background-color:#ffe7e7;}
+
+#Validform_msg{color:#7d8289; font: 12px/1.5 tahoma, arial, \5b8b\4f53, sans-serif; width:280px; -webkit-box-shadow:2px 2px 3px #aaa; -moz-box-shadow:2px 2px 3px #aaa; background:#fff; position:absolute; top:0px; right:50px; z-index:99999; display:none;filter: progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color='#999999');}
+#Validform_msg .iframe{position:absolute; left:0px; top:-1px; z-index:-1;}
+#Validform_msg .Validform_title{line-height:25px; height:25px; text-align:left; font-weight:bold; padding:0 8px; color:#fff; position:relative; background-color:#000;}
+#Validform_msg a.Validform_close:link,#Validform_msg a.Validform_close:visited{line-height:22px; position:absolute; right:8px; top:0px; color:#fff; text-decoration:none;}
+#Validform_msg a.Validform_close:hover{color:#cc0;}
+#Validform_msg .Validform_info{padding:8px;border:1px solid #000; border-top:none; text-align:left;}

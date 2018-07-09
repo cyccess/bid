@@ -1,0 +1,278 @@
+﻿@{
+    ViewBag.Title = "用户";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model PagedList<User>
+@section Head{<link href="~/assets/bower_components/icheck/skins/minimal/red.css" rel="stylesheet" />}
+
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-list"></i></a>
+                <a href="javascript:;">用户</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <div class="sub_toolbar">
+            <button class="btn btn-success btn-fancy btn-sm" onclick="uv.js_user_add(this)"><i class="glyphicon glyphicon-plus"></i> 创建用户</button>
+        </div>
+    </div>
+</div>
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="frame">
+        <div class="frame-header">
+            <span class="title-breadcrumb">
+                <a href="javascript:;">用户</a>
+            </span>
+        </div>
+        <hr class="m0" />
+        <div class="widget widget-mytask">
+            <div class="body">
+                <div class="line-item-container">
+                    @foreach (var item in Model)
+                    {
+                        <div id="user_item_@item.Id" class="item-style" onclick="locator.openUser(this, {uid:@item.Id})">
+                            <div class="entry-item-main">
+                                <a href="javascript:;" class="entry-item-title">@item.UserName</a>
+                            </div>
+                            <div class="item-badges">
+                                @foreach (var part in item.UserRoles)
+                                {
+                                    <span class="item-badge item-label bule-label">@part.Role.Name</span>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <div class="text-center">
+                        @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "id", ContainerTagName = "ul", CssClass = "pagination", CurrentPagerItemTemplate = "<li class=\"active\"><a href=\"#\">{0}</a></li>", DisabledPagerItemTemplate = "<li class=\"disabled\"><a>{0}</a></li>", PagerItemTemplate = "<li>{0}</li>", Id = "bootstrappager" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="sidebar right">
+    <div class="sidebar-loading"></div>
+    <div class="sidebar-panel-wrapper">
+        <div class="sidebar-content"></div>
+    </div>
+</div>
+
+<script type="text/x-jquery-tmpl" id="user_detail">
+    <div class="sidebar-panel-header">
+        <a href="javascript:;" class="name" onclick="uv.js_dis_part(this)">
+            <i class="icon icon-friend"></i>
+            设置角色
+        </a>
+        <a href="javascript:;" class="name" onclick="uv.js_user_edit(this)">
+            <i class="icon icon-edit"></i>
+            <span>编辑</span>
+        </a>
+
+        <a href="javascript:;" class="name" onclick="uv.js_reset_pass(this)">
+            <i class="icon icon-link"></i>
+            <span>重置密码</span>
+        </a>
+
+        <a href="javascript:;" class="name" onclick="uv.js_user_remove(this)">
+            <i class="icon icon-delete"></i>
+            删除
+        </a>
+
+        <ul class="nav nav-pills">
+            <li class="divider"></li>
+            <li>
+                <a href="javascript:;" class="js-close" title="关闭">
+                    <i class="icon icon-close"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="sidebar-panel-body height-nonav">
+        <div class="content mCustomScrollbar">
+            <div class="entry-well-content">
+                <div class="entry-title">
+                    <h4>${UserName}</h4>
+                </div>
+                <div class="entry-desc">
+                    <p>姓名：${Email}</p>
+                    <p>姓名：${FullName}</p>
+                    <p>电话：${PhoneNumber}</p>
+                    <p>
+                        状态：
+                        {{if Status === 1}}
+                        <span class="label label-success">启用</span>
+                        {{else}}
+                        <span class="label label-default">禁用</span>
+                        {{/if}}
+                    </p>
+                </div>
+                <hr />
+                <div class="entity-app">
+                    <div class="entity-app-title"><i class="icon icon-cascades"></i> 拥有项目</div>
+                    <ul>
+                        {{each(i,up) UserProjects}}
+                        <li id="user_project_item_${up.Project.Id}">
+                            <a href="javascript:;" class="item-label">${up.Project.Name}</a>
+                            <i class="icon icon-close" title="移除该项目" onclick="uv.js_remove_project(this)" data-project-id="${up.Project.Id}"></i>
+                        </li>
+                        {{/each}}
+                        <li class="set-project">
+                            <a href="javascript:;" class="" onclick="uv.js_open_project(this)"><i class="icon icon-cascades"></i> 设置项目</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-jquery-tmpl" id="user_edit">
+    <form class="user-add-form aui" id="form1" action="" method="post">
+        <fieldset>
+            <div class="form-group">
+                <label class="control-label">账户名</label>
+                <input type="text" name="UserName" class="form-control" datatype="*" value="${UserName}" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Email</label>
+                <input type="text" name="Email" class="form-control" datatype="e" value="${Email}" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">姓名</label>
+                <input type="text" name="FullName" class="form-control" value="${FullName}" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">电话号码</label>
+                <input type="text" name="PhoneNumber" class="form-control" datatype="m" ignore="ignore" errormsg="请输入正确的手机号码" value="${PhoneNumber}" />
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">是否禁用</label>
+                <div>
+                    <label class="radio-inline">
+                        <input id="rdoStatus1" name="Status" type="radio" {{if Status === 0}} checked {{/if}} value="1"> 是
+                    </label>
+                    <label class="radio-inline">
+                        <input id="rdoStatus2" name="Status" type="radio" {{if Status == 1}} checked {{/if}} value="0"> 否
+                    </label>
+                </div>
+            </div>
+            <div class="form-group text-right">
+                <button type="button" class="btn btn-success btn-sm" id="sure">保存</button>
+                <button type="submit" class="btn btn-default btn-sm" id="cancel">取消</button>
+            </div>
+        </fieldset>
+    </form>
+</script>
+
+<script type="text/x-jquery-tmpl" id="user_reset_pass">
+    <div class="popbox">
+        <div class="popbox-header">
+            <button class="cancel icon-remove">&times;</button>
+            <h3>重置密码</h3>
+        </div>
+        <form class="wt-form reset-pass-form">
+            <div class="popbox-body">
+                <div class="form-group">
+                    <label class="control-label">密码</label>
+                    <input type="password" id="pwd1" name="Password" class="form-control" datatype="*6-16" placeholder="密码" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">确认密码</label>
+                    <input type="password" id="pwd2" name="Password1" class="form-control" datatype="*" recheck="Password" placeholder="确认密码" />
+                </div>
+            </div>
+        </form>
+        <div class="popbox-footer">
+            <button class="btn btn-success mr_15" id="sure">确定</button>
+            <button class="btn btn-default cancel">取消</button>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-jquery-tmpl" id="part_list">
+    {{each(i,p) projects}}
+    <div class="entry-part-content">
+        <div class="entry-part-title">${p.Name}</div>
+        <ul>
+            {{each(i,r) p.Roles}}
+            <li class="${$item.check(r.Id)}">
+                <a href="javascript:;" class="item-label" onclick="uv.js_set_part(this)" data-role-id="${r.Id}">${r.Name}</a>
+            </li>
+            {{/each}}
+
+            {{if Roles.length === 0}}
+            <li class="no-role">该项目暂无角色</li>
+            {{/if}}
+        </ul>
+    </div>
+    <hr />
+    {{/each}}
+</script>
+
+<script type="text/x-jquery-tmpl" id="user_remove">
+    <div class="popbox">
+        <div class="popbox-header">
+            <button class="cancel icon-remove">&times;</button>
+            <h3>删除用户</h3>
+        </div>
+        <div class="popbox-body w_300">
+            删除用户后，将不能恢复！
+        </div>
+        <div class="popbox-footer">
+            <button class="btn btn-danger mr_15" id="sure">确定删除 </button>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-jquery-tmpl" id="popbox_project">
+    <div class="popbox">
+        <ul class="popbox-step">
+            <li class="popbox-step-li">
+                <div class="popbox-header">
+                    <button class="cancel icon-remove">&times;</button>
+                    <h3>设置项目</h3>
+                </div>
+                <div class="popbox-bodywrapper">
+                    <div class="popbox-body">
+                        <ul class="popbox-menu project-list"></ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script type="text/x-jquery-tmpl" id="set_project_list">
+    <li>
+        <a href="javascript:;" id="project_item_${Id}" class="item-project" onclick="uv.js_set_project(this)" data-project-id="${Id}">
+            {{if $item.check(Id)}}
+            <i class="icon icon-check"></i>
+            {{else}}
+            <i class="icon icon-xxx"></i>
+            {{/if}}
+            <span class="label-name pl10">${Name}</span>
+        </a>
+    </li>
+</script>
+
+<script type="text/x-jquery-tmpl" id="add_project_item">
+    <li id="user_project_item_${Id}">
+        <a class="item-label">${Name}</a>
+        <i class="icon icon-close"></i>
+    </li>
+</script>
+
+@section Script{
+    <script src="~/assets/bower_components/icheck/icheck.min.js"></script>
+    <script src="~/assets/js/Validform_v5.3.2_min.js"></script>
+    <script src="~/assets/js/jquery.sidebar.js"></script>
+    <script src="~/assets/js/jquery.tmpl.min.js"></script>
+    <script src="~/assets/js/popbox.js"></script>
+    <script src="~/assets/js/user.js"></script>
+}

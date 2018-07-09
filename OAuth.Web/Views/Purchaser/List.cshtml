@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "采购商查看";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IPagedList<Purchaser>
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-list"></i></a>
+                <a href="javascript:;">采购商查看</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <div class="sub_toolbar">
+            
+        </div>
+    </div>
+</div>
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="frame">
+        <div class="frame-header">
+            <span class="title-breadcrumb">
+                <a href="javascript:;">采购商列表</a>
+            </span>
+        </div>
+        <hr class="m0" />
+        <div class="widget widget-mytask">
+            <div class="frame-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>采购商名称</th>
+                            <th>单位地址</th>
+                            <th>法定代表人</th>
+                            <th>传值电话</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><a href="/Purchaser/Detail/@item.Id">@item.PurchaserName</a></td>
+                                <td>@item.Address</td>
+                                <td>@item.LegalPerson</td>
+                                <td>@item.Fax</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "id", ContainerTagName = "ul", CssClass = "pagination", CurrentPagerItemTemplate = "<li class=\"active\"><a href=\"#\">{0}</a></li>", DisabledPagerItemTemplate = "<li class=\"disabled\"><a>{0}</a></li>", PagerItemTemplate = "<li>{0}</li>", Id = "bootstrappager" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

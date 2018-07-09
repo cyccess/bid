@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "工程竞价";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IPagedList<Item>
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-list"></i></a>
+                <a href="javascript:;">工程竞价</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <div class="sub_toolbar">
+        </div>
+    </div>
+</div>
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="frame">
+        <div class="frame-header">
+            <span class="title-breadcrumb">
+                <a href="javascript:;">工程列表</a>
+            </span>
+        </div>
+        <hr class="m0" />
+        <div class="widget widget-mytask">
+            <div class="body">
+                <div class="line-item-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>工程名称</th>
+                                <th>起始日期</th>
+                                <th>截止日期</th>
+                                <th>发布日期</th>
+                                <th>签约地点</th>
+                                <th>发布人员</th>
+                                <th>联系方式</th>
+                                <th>备注</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <th scope="row"><div class="w80 text-overflow" title="@item.ItemName"><a href='/Supplier/QuoteMaterialList/@item.Id?tempmode=@item.TempMode'>@item.ItemName</a></div></th>
+                                    <td>@item.StartDate.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>@item.EndDate.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>@item.InputTime.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td><div class="w60 text-overflow" title="@item.SignPlace">@item.SignPlace</div></td>
+                                    <td>@item.User.FullName</td>
+                                    <td>@item.User.PhoneNumber</td>
+                                    <td><div class="w80 text-overflow" title="@item.Memo">@item.Memo</div></td>
+                                    <td>
+                                        <a href="/Supplier/QuoteMaterialList/@item.Id?tempmode=@item.TempMode" class="btn btn-success btn-xs"  data-id="@item.Id" >查看物料</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "id", ContainerTagName = "ul", CssClass = "pagination", CurrentPagerItemTemplate = "<li class=\"active\"><a href=\"#\">{0}</a></li>", DisabledPagerItemTemplate = "<li class=\"disabled\"><a>{0}</a></li>", PagerItemTemplate = "<li>{0}</li>", Id = "bootstrappager" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

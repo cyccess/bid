@@ -1,0 +1,241 @@
+﻿@{
+    ViewBag.Title = "模块 | " + Model.CurrentProject.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Head{<link href="~/assets/bower_components/icheck/skins/minimal/red.css" rel="stylesheet" />}
+<input id="appid" type="hidden" value="@Model.CurrentProjectId" />
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-cascades"></i></a>
+                <a href="javascript:;">@Model.CurrentProject.Name</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <ul class="mod_subnav">
+            <li><a href="/Project/Detail/@Model.CurrentProjectId">角色</a></li>
+            <li><a href="/Module/Index/@Model.CurrentProjectId" class="active">模块</a></li>
+            <li><a href="/Permission/Index/@Model.CurrentProjectId">动作</a></li>
+        </ul>
+        <div class="sub_toolbar">
+            <button class="btn btn-success btn-fancy" id="btnAdd" data-appid="@Model.CurrentProjectId"><i class="glyphicon glyphicon-plus"></i> 新建模块</button>
+            <div class="btn-group">
+                <a class="btn btn-primary btn-fancy" href="/Module/Index/@Model.CurrentProjectId">筛选</a>
+                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">module list</span>
+                </button>
+                <ul class="dropdown-menu">
+                    @foreach (var item in (Model.ParentModule as IEnumerable<ParentModule>))
+                    {
+                        <li><a href="/Module/Index/@Model.CurrentProject.Uniqueid.ToString("N")/?moduleNo=@item.ModuleNo" id="module_parent_@item.ModuleNo">@item.ModuleName</a></li>
+                    }
+                </ul>
+            </div>
+            <span class="color_text_lightgray plr10">|</span>
+            <a href="/Module/Index/@Model.CurrentProjectId/?isparent=@((!Model.IsParent).ToString())">@(@Model.IsParent ? "查看所有模块" : "查看父模块")</a>
+        </div>
+    </div>
+</div>
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="module-content">
+        <div class="header">
+            <a class="title" href="#">模块</a>
+        </div>
+        <ul class="module-list-container">
+            @foreach (var item in Model.PageList as IEnumerable<Module>)
+            {
+                <li id="module_main_@item.ModuleNo" class="@(!item.IsParent ? "son" : "sup")" data-module-id="@item.ModuleNo" onclick="locator.module({projectId:@item.ProjectId,moduleId:@item.Id})">
+                    <div class="entry-module-main">
+                        <a href="javascript:;" class="entry-module-title">@item.ModuleName</a>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="sidebar right">
+    <div class="sidebar-loading"></div>
+    <div class="sidebar-panel-wrapper">
+        <div class="sidebar-content">
+
+        </div>
+    </div>
+</div>
+
+<script type="text/x-jquery-tmpl" id="module_detail">
+    <div class="sidebar-panel-header">
+        <a href="javascript:;" class="name" onclick="locator.module.fn.js_module_edit(this)">
+            <i class="icon icon-edit"></i>
+            <span>编辑</span>
+        </a>
+        <a href="javascript:;" onclick="locator.module.fn.js_assign_action(this)" class="name action-manage">
+            <i class="icon icon-link"></i>
+            <span>设置动作</span>
+        </a>
+        {{if !module.IsParent }}
+        <a href="javascript:;" class="name" onclick="locator.module.fn.js_module_remove(this)">
+            <i class="icon icon-delete"></i>
+            删除
+        </a>
+        {{/if}}
+        <ul class="nav nav-pills">
+            <li>
+                <a href="javascript:;" class="js-close" title="关闭">
+                    <i class="icon icon-close"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="sidebar-panel-body">
+        <div class="content mCustomScrollbar">
+            <div class="entry-well-content">
+                <div class="entry-title">
+                    <h4>${module.ModuleName}</h4>
+                </div>
+                <div class="entry-desc">
+                    <p>编号：${module.ModuleNo}</p>
+                    <p>图标：${module.ModuleIcon}</p>
+                    <p>排序：${module.OrderSort}</p>
+                    <p>
+                        状态：
+                        {{if module.Status == 1}}
+                        <span class="label label-success">启用</span>
+                        {{else}}
+                        <span class="label label-default">禁用</span>
+                        {{/if}}
+                    </p>
+                    <p>链接地址：${module.ModuleUrl}</p>
+                </div>
+                <hr />
+                <div class="module-action">
+                    <dl>
+                        <dt><i class="icon icon-link"></i> 动作</dt>
+                        <dd>
+                            <ul class="module-action-labels">
+                                {{each(i,action) actions}}
+                                <li class="label label-primary" id="action_item_${action.Id}">
+                                    ${action.PermissionName}
+                                    <a href="javascript:;" class="icon icon-close icon-action" title="删除该动作" onclick="locator.module.fn.js_remove_action(this)" data-action-id="${action.Id}"></a>
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-jquery-tmpl" id="module-action-labels">
+    <li class="label label-primary" id="action_item_${Id}">
+        ${PermissionName}
+        <a href="javascript:;" class="icon icon-close icon-action" title="删除该动作" onclick="locator.module.fn.js_remove_action(this)" data-action-id="${Id}"></a>
+    </li>
+</script>
+
+<script type="text/x-jquery-tmpl" id="add_module_action">
+    <div class="popbox">
+        <div class="popbox-header">
+            <button class="cancel icon-remove">&times;</button>
+            <h3>设置动作</h3>
+        </div>
+        <form class="wt-form add-action-form">
+            <div class="popbox-body">
+                <div class="form-group">
+                    <label>动作名称：</label>
+                    <div>
+                        <input type="text" class="form-control" name="PermissionName" datatype="*" placeholder="动作名称" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Controller：</label>
+                    <div>
+                        <input type="text" class="form-control" name="PermissionController" datatype="*" placeholder="控制器" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Action：</label>
+                    <div>
+                        <input type="text" class="form-control" name="PermissionAction" datatype="*" placeholder="动作" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Icon：</label>
+                    <div>
+                        <input type="text" class="form-control" name="Icon" datatype="*" placeholder="图标" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="popbox-footer">
+            <button class="btn btn-success mr_15" onclick="locator.module.fn.js_add_action()">确定</button>
+            <button class="btn btn-default cancel">取消</button>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-jquery-tmpl" id="module-edit">
+    <form class="module-add-form aui" id="form1" action="" method="post">
+        <fieldset>
+            <div class="form-group">
+                <label class="control-label">模块名称：</label>
+                <input type="text" name="ModuleName" class="form-control" datatype="*" value="${ModuleName}" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">模块地址：</label>
+
+                <input type="text" id="pwd1" name="ModuleUrl" class="form-control" datatype="*" value="${ModuleUrl}" />
+            </div>
+            <div class="form-group">
+                <label class=" control-label">排序编号：</label>
+                <input type="text" name="OrderSort" class="form-control" datatype="n" value="${OrderSort}" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">模块图标：</label>
+                <input type="text" name="ModuleIcon" class="form-control" value="${ModuleIcon}" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">是否启用：</label>
+                <div>
+                    <input id="rdoStatus1" name="Status" type="radio" {{if Status == 1}} checked {{/if}} value="1">
+                    <label class="radio-inline">是</label>
+                    <input id="rdoStatus2" name="Status" type="radio" {{if Status == 0}} checked {{/if}} value="0">
+                    <label class="radio-inline">否</label>
+                </div>
+            </div>
+            <div class="form-group text-right">
+                <button type="submit" class="btn btn-success btn-sm" id="sure">保存</button>
+                <button type="button" class="btn btn-default btn-sm" id="cancel">取消</button>
+            </div>
+        </fieldset>
+    </form>
+</script>
+
+<script type="text/x-jquery-tmpl" id="module_remove">
+    <div class="popbox">
+        <div class="popbox-header">
+            <button class="cancel icon-remove">&times;</button>
+            <h3>删除模块</h3>
+        </div>
+        <div class="popbox-body w_300">
+            模块删除后，模块动作将会一并删除 。
+        </div>
+        <div class="popbox-footer">
+            <button class="btn btn-danger mr_15" id="sure">确定删除 </button>
+        </div>
+    </div>
+</script>
+
+@section Script{
+    <script src="~/assets/bower_components/icheck/icheck.min.js"></script>
+    <script src="~/assets/js/jquery.sidebar.js"></script>
+    <script src="~/assets/js/popbox.js"></script>
+    <script src="~/assets/js/Validform_v5.3.2_min.js"></script>
+    <script src="~/assets/js/jquery.tmpl.min.js"></script>
+    <script src="~/assets/js/module.js"></script>
+}

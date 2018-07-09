@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewBag.Title</title>
+    <link href="/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="/assets/css/dashboard.css" rel="stylesheet" />
+    <link href="/assets/css/base_inner.css" rel="stylesheet" />
+    <link href="/assets/css/iconfont.css" rel="stylesheet" />
+    <link href="/assets/css/jquery.noty.css" rel="stylesheet" />
+    <link href="/assets/css/noty_theme_default.css" rel="stylesheet" />
+    <link href="~/assets/css/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
+
+    @RenderSection("Head", required: false)
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/assets/js/html5shiv.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="javascript:;">询价管理系统</a>
+            </div>
+
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="create-project">
+                        @*<button class="btn btn-primary" id="create_project"><strong>发布工程</strong></button>*@
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav pull-right">
+
+                    <li id="user-options" class="dropdown">
+
+                        <a id="header-details-user-fullname" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="false" role="button" aria-expanded="false">
+                            @*<span class="glyphicon glyphicon-user"></span>*@
+                            @SessionService.SessionInfo.UserName
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="header-details-user-fullname">
+                            @*<li role="presentation"><a role="menuitem" tabindex="-1" href="#">切换系统</a></li>
+                            <li role="presentation" class="divider"></li>*@
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="/Home/SignOut">注销登录</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        @if (SessionService.SessionInfo.UserType == UserType.Supplier)
+                        {
+                            <a href="/static/help/%E4%BE%9B%E8%B4%A7%E5%95%86%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.pdf" target="_blank" title="供货商使用说明">帮助 <i class="glyphicon glyphicon-question-sign"></i></a>
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 left-menu">
+                @Html.Partial("_MenuPartial")
+            </div>
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <div class="navigator-group">
+                    <div class="results-panel">
+                        <div class="navigator-content">@RenderBody()</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/js/jquery-1.10.2.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/respond.min.js"></script>
+    <script src="/assets/js/docs.min.js"></script>
+    <script src="/assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="/assets/js/jquery.noty.js"></script>
+    <script src="/assets/js/dialog.js"></script>
+    <script src="/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script>
+        $(function () {
+            if ($(".frame-body>.line-item-container").length > 0) {
+                $(".frame-body>.line-item-container").mCustomScrollbar({ axis: "x", theme: "3d-thick-dark" });
+            }
+
+            $("#create_project").on("click", function () {
+                location.href = "/Subject/Step1";
+            });
+
+            $("ul.main-meun li").removeClass("active");
+            $("ul.main-meun li a").each(function() {
+                if ($(this)[0].href === String(window.location)) {
+                    $(this).parent().addClass("active");
+                }
+            });
+        })
+    </script>
+    @RenderSection("Script", required: false)
+</body>
+</html>

@@ -1,0 +1,62 @@
+﻿
+@model RoleDto
+
+<div class="sidebar-panel-header">
+    <a href="javascript:;" class="name">
+        <i class="icon icon-my"></i>
+        <span>@Model.RoleName</span>
+    </a>
+    <ul class="nav nav-pills">
+        <li>
+            <a href="javascript:;" class="delete" data-id="@Model.RoleId">
+                <i class="icon icon-delete"></i>
+                删除
+            </a>
+        </li>
+        <li class="divider"></li>
+        <li>
+            <a href="javascript:;" class="js-close" title="关闭">
+                <i class="icon icon-close"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="sidebar-panel-body">
+    <div class="permission-title">
+        <input id="chkAll" type="checkbox" data-roleid="@Model.RoleId" />
+        <label class="checkbox-inline" for="chkAll">选择全部</label>
+    </div>
+    <div class="content mCustomScrollbar">
+        <div class="permission-container">
+            @{
+                var modules = Model.Modules;
+                var parentModules = modules.Where(m => m.IsParent == true);
+                bool checkFlag = false;
+                foreach (var item in parentModules)
+                {
+                    checkFlag = Model.RoleRightDto.Count(r => r.ModuleId == item.Id) > 0;
+
+                    <div class="row">
+                        <div class="col-sm-12 role-menu-parent">
+                            <input type="checkbox" id="checkbox-parent-@(item.Id)" name="RoleRight" @(checkFlag ? "checked" : "") value="@item.Id" data-roleid="@Model.RoleId" />
+                            <label class="checkbox-inline" for="checkbox-parent-@(item.Id)">@item.ModuleName</label>
+                        </div>
+                    
+                        <ul class="col-sm-10 role-menu-group">
+                            @foreach (var childModule in modules.Where(m => m.IsParent == false && m.ParentNo == item.ModuleNo))
+                            {
+                                checkFlag = Model.RoleRightDto.Count(r => r.ModuleId == childModule.Id) > 0;
+
+                                <li>
+                                    <input type="checkbox" id="checkbox-@(childModule.Id)" name="RoleRight" @(checkFlag ? "checked" : "") value="@childModule.Id" data-roleid="@Model.RoleId" />
+                                    <label class="checkbox-inline box_label" for="checkbox-@(childModule.Id)" title="@childModule.ModuleName">@childModule.ModuleName</label>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <hr />
+                }
+            }
+        </div>
+    </div>
+</div>

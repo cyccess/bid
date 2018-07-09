@@ -1,0 +1,13 @@
+﻿    <li class="dropdown">
+        <a id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="false" role="button" aria-expanded="false">
+            项目
+            <span class="caret"></span>
+        </a>
+
+        <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+        @foreach (Project item in Model)
+        {
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/Project/Detail/@item.Uniqueid.ToString("N")">@item.Name</a></li>
+        }
+        </ul>
+    </li>

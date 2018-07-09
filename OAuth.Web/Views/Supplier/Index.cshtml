@@ -1,0 +1,212 @@
+﻿@{
+    ViewBag.Title = "供应商管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IPagedList<Supplier>
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-list"></i></a>
+                <a href="javascript:;">供应商管理</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <div class="sub_toolbar">
+            <a href="/Supplier/Add" class="btn btn-success btn-fancy btn-sm"> 新增供应商 </a>
+        </div>
+    </div>
+</div>
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="frame">
+        <div class="frame-header">
+            <span class="title-breadcrumb">
+                <a href="javascript:;">供应商列表</a>
+            </span>
+            <form class="form-inline pull-right">
+                <!-- Single button -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="mode-name">@ViewBag.ModeName</span> <span class="caret"></span>
+                    </button>
+                    <input name="ModeId" type="hidden" />
+                    <ul class="dropdown-menu" style="height:350px;overflow-y:auto;">
+                        <li><a href="javascript:;" data-value="0">全部</a></li>
+                        @foreach (var item in ViewBag.Modes as IEnumerable<Mode>)
+                        {
+                            <li><a href="javascript:;" data-value="@item.Id">@item.ModeName</a></li>
+                        }
+                    </ul>
+                </div>
+                <input class="form-control input-sm" name="SupplierName" value="@Request["SupplierName"]" placeholder="供应商名称" />
+                <button class="btn btn-default btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i> 查询</button>
+            </form>
+        </div>
+        <hr class="m0" />
+        <div class="widget widget-mytask">
+            <div class="frame-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            @*<th>#</th>*@
+                            <th>供应商名称</th>
+                            <th>邮箱</th>
+                            <th>联系人</th>
+                            <th>联系电话</th>
+                            <th>联系手机</th>
+                            <th>是否激活</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var supplier in Model)
+                        {
+                            <tr>
+                                @*<th scope="row">@supplier.Id</th>*@
+                                <td><a href='/Supplier/Edit/@supplier.Id'>@supplier.SupplierName</a></td>
+                                <td>@supplier.Email</td>
+                                <td>@supplier.UserName</td>
+                                <td>@supplier.FixedPhone</td>
+                                <td>@supplier.MobilePhone</td>
+                                <td>
+                                    @{
+                                    if (supplier.IsActivated)
+                                    {
+                                        <span class="text-success">已激活</span>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-primary btn-xs send-email" data-id="@supplier.Id" title="发送激活邮件">发送邮件</button>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @if (supplier.IsEnabled)
+                                {
+                                    <button type="button" class="btn btn-danger btn-xs is-enabled" data-id="@supplier.Id">禁用</button>
+
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-success btn-xs is-enabled" data-id="@supplier.Id">启用</button>
+                                }
+
+                                @{
+                                    if (supplier.IsActivated)
+                                    {
+                                        <button type="button" class="btn btn-primary btn-xs forget" data-id="@supplier.Id" title="密码通知">密码通知</button>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "id", ContainerTagName = "ul", CssClass = "pagination", CurrentPagerItemTemplate = "<li class=\"active\"><a href=\"#\">{0}</a></li>", DisabledPagerItemTemplate = "<li class=\"disabled\"><a>{0}</a></li>", PagerItemTemplate = "<li>{0}</li>", Id = "bootstrappager" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/template" id="delete-tmpl">
+    <div class="modal-content">
+        <form class="form-horizontal aui" id="add_user_form" action="/User/Add" method="post">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h3>提示</h3>
+            </div>
+            <p class="text-danger mt30 mb30 pl20">您确定要<span class="operate-text"></span>该供应商吗？</p>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" id="cancel" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary btn-sm" id="sure">确定</button>
+            </div>
+        </form>
+    </div>
+</script>
+@section Script{
+    <script>
+        $(function () {
+
+            $(".dropdown-menu>li>a").on("click", function () {
+                var $that = $(this);
+                var modelId = $that.data("value");
+
+                $that.parent().parent().prev().val(modelId);
+                $that.parent().parent().prev().prev().find('span[class="mode-name"]').text($that.text());
+            });
+
+            $(".is-enabled").on("click", function () {
+                var tmpl = $("#delete-tmpl").html();
+                var $that = $(this);
+                var id = $that.data("id");
+                $.dialog({
+                    content: tmpl,
+                    width: "400px",
+                    init: function () {
+                        $(".operate-text").text($that.text());
+                    },
+                    sure: function () {
+                        var dialog = this;
+                        $.post("/Supplier/Delete", { id: id }, function (data) {
+                            if (data.code === 200) {
+                                dialog.modal.close();
+                                $.noty({
+                                    layout: 'topCenter',
+                                    type: 'information',
+                                    timeout: 2000,
+                                    text: data.message,
+                                    onClose: function () {
+                                        location.href = location.href;
+                                    }
+                                });
+                            }
+                        });
+                        return false;
+                    }
+                });
+            });
+
+            $(".send-email").on("click", function () {
+                var that = $(this);
+                var supplierId = that.data("id");
+                $.post("/Supplier/SendActiveEmail", { supplierId: supplierId }, function (data) {
+                    if (data.code === 200) {
+                        $.noty({
+                            layout: 'topCenter',
+                            type: 'information',
+                            timeout: 2000,
+                            text: data.message,
+                            onClose: function () {
+                                //location.href = location.href;
+                            }
+                        });
+
+                        that.removeClass("btn-primary").addClass("btn-default").attr("disabled", true);
+                    }
+                });
+            });
+
+            $(".forget").on("click", function () {
+                var that = $(this);
+                var supplierId = that.data("id");
+                $.post("/Supplier/ForgetPassword", { supplierId: supplierId }, function (data) {
+                    if (data.code === 200) {
+                        $.noty({
+                            layout: 'topCenter',
+                            type: 'information',
+                            timeout: 2000,
+                            text: data.message,
+                            onClose: function () {
+                                //location.href = location.href;
+                            }
+                        });
+
+                        that.addClass("btn-default").attr("disabled", true);
+                    }
+                });
+            });
+        })
+    </script>
+}

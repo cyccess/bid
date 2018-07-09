@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "采购商管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IPagedList<Purchaser>
+<div class="mod-navbar">
+    <div class="main-header">
+        <div class="title">
+            <h3>
+                <a href="javascript:;"><i class="icon icon-list"></i></a>
+                <a href="javascript:;">采购商管理</a>
+            </h3>
+        </div>
+    </div>
+    <div class="sub">
+        <div class="sub_toolbar">
+            <a href="/Purchaser/Edit" class="btn btn-success btn-fancy btn-sm"> 新增采购商 </a>
+        </div>
+    </div>
+</div>
+<div class="navigator-results mCustomScrollbar" data-mcs-theme="3d-thick-dark">
+    <div class="frame">
+        <div class="frame-header">
+            <span class="title-breadcrumb">
+                <a href="javascript:;">采购商列表</a>
+            </span>
+        </div>
+        <hr class="m0" />
+        <div class="widget widget-mytask">
+            <div class="frame-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            @*<th>#</th>*@
+                            <th>采购商名称</th>
+                            <th>单位地址</th>
+                            <th>法定代表人</th>
+                            @*<th>委托代理人</th>*@
+                            <th>传值电话</th>
+                            @*<th>开户银行</th>
+                            <th>银行账号</th>*@
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                @*<th scope="row">@supplier.Id</th>*@
+                                <td><a href='/Purchaser/Edit/@item.Id'>@item.PurchaserName</a></td>
+                                <td>@item.Address</td>
+                                <td>@item.LegalPerson</td>
+                                @*<td>@item.EntrustPerson</td>*@
+                                <td>@item.Fax</td>
+                                @*<td>@item.BankName</td>
+                                <td>@item.BankNo</td>*@
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-xs" data-toggle="button" data-id="@item.Id" aria-pressed="false" autocomplete="off">删除</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="text-center">
+                    @Html.Pager(Model, new PagerOptions { PageIndexParameterName = "id", ContainerTagName = "ul", CssClass = "pagination", CurrentPagerItemTemplate = "<li class=\"active\"><a href=\"#\">{0}</a></li>", DisabledPagerItemTemplate = "<li class=\"disabled\"><a>{0}</a></li>", PagerItemTemplate = "<li>{0}</li>", Id = "bootstrappager" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/template" id="delete-tmpl">
+    <div class="modal-content">
+        <form class="form-horizontal aui" id="add_user_form" action="/User/Add" method="post">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h3>删除采购商</h3>
+            </div>
+            <p class="text-danger mt30 mb30 pl20">您确定要删除该采购商吗？删除后将无法恢复！</p>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" id="cancel" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary btn-sm" id="sure">确定</button>
+            </div>
+        </form>
+    </div>
+</script>
+@section Script{
+    <script>
+        $(function() {
+            $(".btn-danger").on("click", function() {
+                var tmpl = $("#delete-tmpl").html();
+                var id = $(this).data("id");
+                $.dialog({
+                    content: tmpl,
+                    width: "400px",
+                    init: function() {
+
+                    },
+                    sure: function () {
+                        var dialog = this;
+                        $.post("/Purchaser/Delete", { id: id }, function (data) {
+                            if (data.code === 200) {
+                                dialog.modal.close();
+                                $.noty({
+                                    layout: 'topCenter',
+                                    type: 'information',
+                                    timeout: 2000,
+                                    text: data.message,
+                                    onClose: function () {
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        });
+                        return false;
+                    }
+                });
+            });
+        })
+    </script>
+}
