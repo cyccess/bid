@@ -9,3 +9,5 @@
 /OAuth.Domain
 /OAuth.Service
 /OAuth.Web
+/packages
+/.vs/OAuth/v15
