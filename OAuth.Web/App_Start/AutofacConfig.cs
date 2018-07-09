@@ -53,7 +53,7 @@ namespace OAuth.Web
         {
             string connString = ConfigurationManager.ConnectionStrings["OAuthConnectionString"].ConnectionString;
             string strEncryptConn = "";
-            AESEDSVcrypts.AES_Decrypt(connString, out strEncryptConn);
+            //AESEDSVcrypts.AES_Decrypt(connString, out strEncryptConn);
             return strEncryptConn;
         }
 
