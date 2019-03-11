@@ -1404,6 +1404,7 @@
     <Content Include="Views\Supplier\List.cshtml" />
     <Content Include="Views\Home\TestDecrypt.cshtml" />
     <Content Include="Views\Subject\Step4_2.cshtml" />
+    <Content Include="STSONG.TTF" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UploadFile\excel\" />
